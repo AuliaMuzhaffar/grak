@@ -1,0 +1,26 @@
+{
+  "initial_count": 14818,
+  "steps": {
+    "1_clean_text": 14817,
+    "2_validation": 14809,
+    "3_boilerplate": 14407,
+    "4_exact_dedup": 13926,
+    "5_near_dedup": 13840,
+    "6_aceh_tagged": {
+      "high": 5715,
+      "medium": 4315,
+      "low": 3810
+    }
+  },
+  "final_count": 13840,
+  "reduction_pct": 6.6,
+  "word_count_stats": {
+    "mean": 31.1,
+    "median": 29.0,
+    "min": 5,
+    "max": 397
+  },
+  "unique_articles": 1163,
+  "unique_portals": 243,
+  "generated_at": "2026-09-12 12:35:28"
+}

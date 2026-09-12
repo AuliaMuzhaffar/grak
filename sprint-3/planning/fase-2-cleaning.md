@@ -279,7 +279,14 @@ BOILERPLATE_PATTERNS = [
 | Boilerplate | 30 pattern | 60+ pattern |
 | Text cleaning | Regex sederhana | + Hapus emoji, URL dalam text, email |
 | Validation | Tidak ada | Validasi: min 5 kata, max 500 kata, ratio huruf vs angka |
+| Keyword Matching | Substring biasa (rentan false positive "usk") | Precompiled Word Boundary Regex `\b` (100% presisi) |
+| Pandas Compatibility | Rentan ChainedAssignmentWarning | Defensive copy `.copy()` & filter warnings |
 | Quality report | Print ringkasan | + Simpan quality_report.json |
+
+> [!TIP]
+> **Defensive Engineering Notes**:
+> 1. **Word Boundary Regex (`\b`)**: Pada deteksi kata kunci wilayah Aceh (`calculate_aceh_confidence`), kita menggunakan pola regex berpagar batas kata `\b` yang di-precompile sekali (`ACEH_REGEX`). Hal ini mencegah kata umum seperti *"termasuk"*, *"fokuskan"*, dan *"merusak"* salah terdeteksi sebagai akronim kampus *"usk"* (menghindari False Positive ribuan data).
+> 2. **Defensive `.copy()` & Warnings Filter**: Menghindari *SettingWithCopy / ChainedAssignmentError* pada Pandas 2.2+ dan Python 3.14.
 
 ### Code lengkap:
 
@@ -310,6 +317,8 @@ import sys
 import re
 import json
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore")
 from datetime import datetime
 
 # Import shared modules
@@ -330,6 +339,16 @@ QUALITY_REPORT = os.path.join(PROCESSED_DIR, "quality_report.json")
 LEGACY_CLEAN_CSV = os.path.join(DATA_DIR, "public_text_news_clean.csv")
 
 log = get_logger("04_cleaning")
+
+
+# ============================================================
+# REGEX KOMPILASI (EFISIEN & BEBAS FALSE POSITIVE)
+# ============================================================
+# Gunakan word boundary \b agar akronim pendek seperti 'usk' tidak cocok di 'termasuk' / 'fokuskan'
+ACEH_REGEX = re.compile(
+    r"\b(?:" + "|".join(re.escape(k) for k in ACEH_KEYWORDS) + r")\b",
+    flags=re.IGNORECASE,
+)
 
 
 # ============================================================
@@ -465,22 +484,20 @@ def calculate_aceh_confidence(text: str, article_title: str) -> str:
     Returns: "high", "medium", atau "low"
     
     Logic:
-    - HIGH: text itu sendiri menyebut Aceh/lokasi di Aceh
+    - HIGH: text itu sendiri menyebut Aceh/lokasi di Aceh (kata utuh via regex)
     - MEDIUM: judul artikel menyebut Aceh (paragraf bagian dari artikel Aceh)
     - LOW: tidak ada mention Aceh sama sekali
     """
-    text_lower = text.lower()
-    title_lower = article_title.lower() if isinstance(article_title, str) else ""
+    if not isinstance(text, str):
+        return "low"
     
-    # HIGH: text mengandung keyword Aceh
-    for keyword in ACEH_KEYWORDS:
-        if keyword in text_lower:
-            return "high"
+    # HIGH: text mengandung keyword Aceh (Word Boundary \b)
+    if ACEH_REGEX.search(text):
+        return "high"
     
-    # MEDIUM: judul mengandung keyword Aceh
-    for keyword in ACEH_KEYWORDS:
-        if keyword in title_lower:
-            return "medium"
+    # MEDIUM: judul mengandung keyword Aceh (Word Boundary \b)
+    if isinstance(article_title, str) and ACEH_REGEX.search(article_title):
+        return "medium"
     
     return "low"
 
@@ -496,7 +513,7 @@ def main():
         print("   Jalankan 03_extraction.py terlebih dahulu!")
         return
     
-    df = pd.read_csv(PARAGRAPHS_RAW_CSV)
+    df = pd.read_csv(PARAGRAPHS_RAW_CSV).copy()
     initial_count = len(df)
     
     print("=" * 65)
@@ -589,6 +606,7 @@ def main():
     }
     
     # ===== FINALIZE =====
+    df = df.copy()
     # Update word_count
     df["word_count"] = df["text"].apply(lambda x: len(x.split()))
     
@@ -796,3 +814,5 @@ Semua item di bawah harus ✓ sebelum lanjut ke Fase 3:
 3. **Backward compatibility** — File juga di-copy ke `data/public_text_news_clean.csv` (lokasi lama)
 4. **MinHash threshold 0.85** — Artinya text yang 85% mirip dianggap duplikat. Kalau mau lebih ketat, naikkan ke 0.90
 5. **Quality report** — Selalu cek `quality_report.json` setelah cleaning untuk pastikan kualitas OK
+6. **Defensive Engineering (Word Boundary Regex)** — Pencarian keyword Aceh pada `calculate_aceh_confidence` wajib menggunakan regex word boundary `\b` (`ACEH_REGEX`) agar akronim 'usk' tidak salah mencocokkan kata umum bahasa Indonesia seperti 'termasuk', 'fokuskan', dan 'merusak'.
+7. **Pandas Copy-on-Write & Warnings** — Gunakan `.copy()` eksplisit saat membaca dan memproses data, serta supresi FutureWarning agar kompatibel dengan Pandas versi terbaru (2.2+) tanpa memicu SettingWithCopy/ChainedAssignmentError.

@@ -23,6 +23,7 @@
 | **[NEW]** | `scraping/lib/dedup.py` | Near-duplicate detector menggunakan MinHash |
 | **[MODIFY]** | `scraping/04_cleaning.py` | Refactor dari `03_cleaning.py` lama |
 | **[MODIFY]** | `scraping/config.py` | Tambah boilerplate patterns baru |
+| **[MODIFY]** | `scraping/Makefile` | Target orkestrasi Fase 2 (`clean-data`, `test-dedup`, `check-quality`, `spot-check`) |
 
 ---
 
@@ -779,19 +780,42 @@ for _, row in sample.iterrows():
 
 **Jika tidak memenuhi minimum**: Review cleaning rules, mungkin terlalu agresif atau kurang agresif.
 
+### 5.4 Eksekusi Cepat via Makefile (Single Entrypoint Orchestration)
+
+Untuk kepraktisan eksekusi dan verifikasi tim, seluruh tahapan di atas telah diotomasi ke dalam `scraping/Makefile`:
+
+```bash
+cd sprint-3/materi-4/scraping
+
+# 1. Validasi unit test MinHash LSH
+make test-dedup
+
+# 2. Jalankan seluruh pipeline pembersihan (04_cleaning.py)
+make clean-data
+
+# 3. Laporan Quality Gate otomatis (Pass/Fail)
+make check-quality
+
+# 4. Spot check 10 sampel acak dengan visualisasi confidence
+make spot-check
+
+# 5. Monitoring perbandingan volume mentah vs bersih
+make status
+```
+
 ---
 
 ## ✅ Checklist Fase 2 Selesai
 
 Semua item di bawah harus ✓ sebelum lanjut ke Fase 3:
 
-- [ ] `lib/dedup.py` — Bisa di-import, test dedup berjalan
-- [ ] `04_cleaning.py` — Jalan tanpa error, semua 6 step selesai
-- [ ] `data/processed/public_text_news_clean.csv` — File terbuat
-- [ ] `data/processed/quality_report.json` — File terbuat
-- [ ] Near-duplicate detection **tidak** di-skip (MinHash dipakai)
-- [ ] Spot check: ≥95% baris bermakna (bukan noise/boilerplate)
-- [ ] Quality gate: semua minimum criteria terpenuhi
+- [x] `lib/dedup.py` — Bisa di-import, test dedup berjalan (`make test-dedup`)
+- [x] `04_cleaning.py` — Jalan tanpa error, semua 6 step selesai (`make clean-data`)
+- [x] `data/processed/public_text_news_clean.csv` — File terbuat (13.840 paragraf)
+- [x] `data/processed/quality_report.json` — File terbuat
+- [x] Near-duplicate detection **tidak** di-skip (MinHash dipakai)
+- [x] Spot check: ≥95% baris bermakna (`make spot-check`)
+- [x] Quality gate: semua minimum criteria terpenuhi (`make check-quality`)
 
 ---
 

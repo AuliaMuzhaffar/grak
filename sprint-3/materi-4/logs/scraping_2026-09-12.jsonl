@@ -1947,3 +1947,17 @@
 {"timestamp": "2026-09-12 12:35:15", "level": "INFO", "logger": "04_cleaning", "message": "Cleaning completed", "initial": 14818, "final": 13840, "reduction_pct": 6.6}
 {"timestamp": "2026-09-12 12:35:25", "level": "INFO", "logger": "04_cleaning", "message": "Starting cleaning pipeline", "initial_count": 14818}
 {"timestamp": "2026-09-12 12:35:28", "level": "INFO", "logger": "04_cleaning", "message": "Cleaning completed", "initial": 14818, "final": 13840, "reduction_pct": 6.6}
+{"timestamp": "2026-09-12 15:47:27", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline", "total": 13840}
+{"timestamp": "2026-09-12 15:47:34", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed", "auto_labeled": 6589, "needs_review": 7251, "auto_label_pct": 47.6}
+{"timestamp": "2026-09-12 15:51:34", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline", "total": 13840}
+{"timestamp": "2026-09-12 15:51:42", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed", "auto_labeled": 5973, "needs_review": 7867, "auto_label_pct": 43.2}
+{"timestamp": "2026-09-12 16:21:19", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-09-12 16:21:27", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 11978, "needs_review": 1862, "auto_label_pct": 86.5}
+{"timestamp": "2026-09-12 16:22:30", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-09-12 16:22:38", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 11978, "needs_review": 1862, "auto_label_pct": 86.5}
+{"timestamp": "2026-09-12 16:32:02", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-09-12 16:32:09", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 11978, "needs_review": 1862, "auto_label_pct": 86.5}
+{"timestamp": "2026-09-12 16:57:05", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-09-12 16:57:12", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 11978, "needs_review": 1862, "auto_label_pct": 86.5}
+{"timestamp": "2026-09-12 16:57:34", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-09-12 16:57:42", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 11978, "needs_review": 1862, "auto_label_pct": 86.5}

@@ -384,7 +384,9 @@ class JSONFormatter(logging.Formatter):
         if hasattr(record, "extra_data"):
             log_data.update(record.extra_data)
         
-        return json.dumps(log_data, ensure_ascii=False)
+        # [DEFENSIVE FIX]: default=str mencegah TypeError: Object of type int64 is not JSON serializable (dari numpy/pandas)
+        return json.dumps(log_data, ensure_ascii=False, default=str)
+
 
 
 class StructuredLogger:
@@ -711,17 +713,32 @@ def resolve_single_url(row: dict) -> dict:
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Multi-strategy Google News URL Resolver")
+    parser.add_argument("--limit", type=int, default=None, help="Limit jumlah URL untuk smoke test")
+    parser.add_argument("--workers", type=int, default=5, help="Jumlah thread workers")
+    parser.add_argument("--input", type=str, default=DISCOVERY_CSV, help="File input discovery CSV")
+    parser.add_argument("--output", type=str, default=RESOLVED_CSV, help="File output resolved CSV")
+    args, _ = parser.parse_known_args()
+
+    input_csv = args.input
+    output_resolved_csv = args.output
+    output_failed_csv = RESOLVE_FAILED_CSV if output_resolved_csv == RESOLVED_CSV else os.path.join(os.path.dirname(output_resolved_csv), "resolve_failed.csv")
+
     # ===== Load Discovery CSV =====
-    if not os.path.exists(DISCOVERY_CSV):
-        print(f"❌ File tidak ditemukan: {DISCOVERY_CSV}")
+    if not os.path.exists(input_csv):
+        print(f"❌ File tidak ditemukan: {input_csv}")
         print("   Jalankan 01_discovery.py terlebih dahulu!")
         return
     
-    df = pd.read_csv(DISCOVERY_CSV)
+    df = pd.read_csv(input_csv)
+    if args.limit and args.limit > 0:
+        df = df.head(args.limit).copy()
+
     total = len(df)
     
     # Hitung berapa yang perlu di-resolve
-    needs_resolve = df["url"].apply(is_google_news_url).sum()
+    needs_resolve = int(df["url"].apply(is_google_news_url).sum())
     already_ok = total - needs_resolve
     
     print("=" * 65)
@@ -730,7 +747,9 @@ def main():
     print(f"   • Perlu resolve       : {needs_resolve} (Google News URLs)")
     print(f"   • Sudah OK            : {already_ok} (URL langsung)")
     print(f"   • Google News Decoder : {'✅ AKTIF' if HAS_GNEWS else '⚠️ TIDAK ADA'}")
-    print(f"   • Max workers         : 5 threads")
+    print(f"   • Max workers         : {args.workers} threads")
+    if args.limit:
+        print(f"   • Mode                : 🧪 Smoke test / Limited ({args.limit} URLs)")
     print("=" * 65)
     print()
     
@@ -746,7 +765,7 @@ def main():
     
     start_time = time.time()
     
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {executor.submit(resolve_single_url, item): item for item in items}
         
         with tqdm(total=total, desc="Resolving URLs", unit="url", ncols=85) as pbar:
@@ -792,10 +811,11 @@ def main():
     after_dedup = len(df_success)
     
     # Simpan
-    os.makedirs(DATA_DIR, exist_ok=True)
-    df_success.to_csv(RESOLVED_CSV, index=False, encoding="utf-8-sig")
+    os.makedirs(os.path.dirname(output_resolved_csv), exist_ok=True)
+    df_success.to_csv(output_resolved_csv, index=False, encoding="utf-8-sig")
     if len(df_failed) > 0:
-        df_failed.to_csv(RESOLVE_FAILED_CSV, index=False, encoding="utf-8-sig")
+        df_failed.to_csv(output_failed_csv, index=False, encoding="utf-8-sig")
+
     
     # ===== Ringkasan =====
     print()
@@ -950,38 +970,93 @@ real_url = item.get("resolved_url", raw_url)  # Sudah resolved!
 source_portal = item.get("resolved_domain", get_domain(real_url))
 ```
 
-#### `main()` → Tambah resume logic
+#### `main()` → Tambah Resume Logic & Defensive Data Preservation ⭐ KRITIS
+
+> [!CAUTION]
+> **Defensive Engineering Alert**:
+> Jika Anda hanya meng-copy `main()` dari script lama, Anda akan mengalami 2 bug fatal:
+> 1. **Data Loss (Overwritten)**: Script lama langsung me-overwrite `ARTICLES_DB_CSV` dengan data baru saja, sehingga 660 artikel lama akan **terhapus permanen**!
+> 2. **ID Collision**: Penomoran `article_id` dan `paragraph_id` akan ter-reset dari 1 lagi, merusak relasi database.
+>
+> **Solusi Standar Industri**: Muat data lama ke memori, cari ID maksimum (`max_article_id` dan `max_paragraph_id`), lalu gabungkan `existing + new` sebelum disimpan.
 
 ```python
 def main():
-    # Pakai resolved_urls.csv sebagai input
-    input_csv = RESOLVED_CSV
+    parser = argparse.ArgumentParser(description="Extract article content from resolved URLs")
+    parser.add_argument("--limit", type=int, default=None, help="Limit jumlah URL yang diekstrak (smoke test)")
+    parser.add_argument("--workers", type=int, default=MAX_WORKERS, help=f"Jumlah worker threads (default: {MAX_WORKERS})")
+    parser.add_argument("--input", type=str, default=RESOLVED_CSV, help="File input resolved CSV")
+    parser.add_argument("--output-db", type=str, default=ARTICLES_DB_CSV, help="File output database artikel")
+    parser.add_argument("--output-para", type=str, default=PARAGRAPHS_RAW_CSV, help="File output dataset paragraf")
+    parser.add_argument("--smoke-test", action="store_true", help="Jalankan dalam mode smoke test terisolasi")
+    args, _ = parser.parse_known_args()
+
+    input_csv = args.input
+    output_articles_csv = args.output_db
+    output_paragraphs_csv = args.output_para
+    output_failed_csv = FAILED_URLS_CSV if not args.smoke_test else os.path.join(os.path.dirname(output_articles_csv), "failed_urls.csv")
+
     if not os.path.exists(input_csv):
-        print(f"❌ File tidak ditemukan: {input_csv}")
-        print("   Jalankan 02_resolver.py terlebih dahulu!")
+        print(f"❌ File tidak ditemukan: {input_csv}", flush=True)
+        print("   Jalankan 02_resolver.py terlebih dahulu!", flush=True)
         return
     
     df = pd.read_csv(input_csv)
+    if "resolve_status" in df.columns:
+        df = df[df["resolve_status"] == "success"].copy()
     
-    # Filter hanya yang resolve berhasil
-    df = df[df.get("resolve_status", "success") == "success"]
-    
-    # === RESUME LOGIC ===
-    # Jika articles_database.csv sudah ada, skip URL yang sudah di-extract
-    if os.path.exists(ARTICLES_DB_CSV):
-        df_existing = pd.read_csv(ARTICLES_DB_CSV)
+    total_in_file = len(df)
+
+    # === [DEFENSIVE FIX 1] RESUME LOGIC & ID CONTINUITY ===
+    existing_articles = []
+    existing_paragraphs = []
+    max_article_id = 0
+    max_paragraph_id = 0
+
+    if not args.smoke_test and os.path.exists(output_articles_csv):
+        df_existing = pd.read_csv(output_articles_csv)
         existing_urls = set(df_existing["url"].dropna().tolist())
+        if "raw_url" in df_existing.columns:
+            existing_urls.update(df_existing["raw_url"].dropna().tolist())
+        
         before = len(df)
-        df = df[~df["resolved_url"].isin(existing_urls)]
+        url_col = "resolved_url" if "resolved_url" in df.columns else "url"
+        df = df[~df[url_col].isin(existing_urls)].copy()
         skipped = before - len(df)
-        print(f"⏭️  Resume mode: skip {skipped} URL yang sudah di-extract")
-    
+        if skipped > 0:
+            print(f"⏭️  Resume mode: skip {skipped} URL yang sudah di-extract di {output_articles_csv}", flush=True)
+        
+        existing_articles = df_existing.to_dict(orient="records")
+        if not df_existing.empty and "article_id" in df_existing.columns:
+            max_article_id = int(df_existing["article_id"].max())
+
+    if not args.smoke_test and os.path.exists(output_paragraphs_csv):
+        df_para_existing = pd.read_csv(output_paragraphs_csv)
+        existing_paragraphs = df_para_existing.to_dict(orient="records")
+        if not df_para_existing.empty and "paragraph_id" in df_para_existing.columns:
+            max_paragraph_id = int(df_para_existing["paragraph_id"].max())
+
+    if args.limit and args.limit > 0:
+        df = df.head(args.limit).copy()
+
     total_urls = len(df)
     if total_urls == 0:
-        print("✅ Semua URL sudah di-extract sebelumnya!")
+        print("✅ Semua URL sudah di-extract sebelumnya!", flush=True)
         return
-    
-    # ... sisanya sama seperti sebelumnya ...
+
+    # ... ekstraksi paralel dengan ThreadPoolExecutor(max_workers=args.workers) ...
+    # Di dalam loop saat menyimpan hasil per thread:
+    #   art_record["article_id"] = max_article_id + len(new_articles_db) + 1
+    #   p["paragraph_id"] = max_paragraph_id + len(new_paragraphs_all) + 1
+
+    # === [DEFENSIVE FIX 2] GABUNGKAN DATA LAMA + DATA BARU SEBELUM DISIMPAN ===
+    all_articles_to_save = existing_articles + new_articles_db
+    all_paragraphs_to_save = existing_paragraphs + new_paragraphs_all
+
+    if all_articles_to_save:
+        pd.DataFrame(all_articles_to_save).to_csv(output_articles_csv, index=False, encoding="utf-8-sig")
+    if all_paragraphs_to_save:
+        pd.DataFrame(all_paragraphs_to_save).to_csv(output_paragraphs_csv, index=False, encoding="utf-8-sig")
 ```
 
 ### Verifikasi Step 5:
@@ -1099,6 +1174,8 @@ Semua item di bawah harus ✓ sebelum lanjut ke Fase 2:
 |--------|----------|--------|
 | `ModuleNotFoundError: googlenewsdecoder` | Belum install | `pip install googlenewsdecoder` |
 | `ModuleNotFoundError: lib.http_client` | `__init__.py` belum ada | Buat `lib/__init__.py` |
+| `TypeError: Object of type int64 is not JSON serializable` | Variabel numpy/pandas dicatat ke logger | Pastikan `json.dumps(log_data, ..., default=str)` di `lib/logger.py` |
+| ID artikel reset dari 1 atau 660 artikel lama hilang | File ditimpa tanpa merge data lama | Ambil `max_article_id` lama dan gabungkan `existing + new` sebelum save |
 | Resolver success rate rendah (<60%) | Google blocking | Naikkan delay: edit `DEFAULT_DOMAIN_DELAYS["news.google.com"]` ke `2.0` |
 | `ConnectionError` saat resolve | Internet putus | Cek koneksi, coba lagi |
 | `429 Too Many Requests` | Terlalu cepat | Script otomatis backoff, tunggu saja |
@@ -1107,10 +1184,14 @@ Semua item di bawah harus ✓ sebelum lanjut ke Fase 2:
 
 ---
 
-## 📝 Catatan untuk Agent / Rekan
+## 📝 Catatan untuk Agent / Rekan (Defensive Engineering Standard)
 
-1. **Jangan ubah `01_discovery.py`** — Script ini sudah OK, tidak perlu diubah
-2. **File lama `02_extraction.py` di-rename** — Jadi `03_extraction.py` (karena ada step baru di tengah)
-3. **Urutan eksekusi baru**: `01_discovery.py` → `02_resolver.py` → `03_extraction.py`
-4. **Rate limiter** sudah built-in di `RateLimitedClient`, jangan tambah `time.sleep()` manual lagi
+1. **Jangan ubah `01_discovery.py`** — Script ini sudah OK, tidak perlu diubah.
+2. **File lama `02_extraction.py` di-rename** — Jadi `03_extraction.py` (karena ada step baru di tengah).
+3. **Urutan eksekusi baru**: `01_discovery.py` → `02_resolver.py` → `03_extraction.py`.
+4. **Rate limiter** sudah built-in di `RateLimitedClient`, jangan tambah `time.sleep()` manual lagi.
 5. **Semua password/API key**: Tidak ada. Semua scraping ini pakai public HTTP request biasa.
+6. **Defensive Data Merge & ID Continuity [KRITIS]**: Di `03_extraction.py`, jangan pernah me-overwrite file CSV mentah! Selalu muat data lama ke memori, cari ID maksimum (`max_article_id` dan `max_paragraph_id`), lalu simpan gabungan `existing_articles + new_articles`. Ini menjamin data lama tidak terhapus dan ID berlanjut tanpa duplikasi.
+7. **JSON Safe Serialization**: Di `lib/logger.py`, selalu gunakan `default=str` di `json.dumps` agar metric tipe Pandas/Numpy tidak memicu crash.
+8. **Smoke Test & Makefile**: Telah disediakan `Makefile` (`make smoke`, `make resolve`, `make extract`, `make full`) dan script `smoke_test.py` untuk menguji pipeline pada 50 artikel secara terisolasi tanpa mengotori database produksi.
+

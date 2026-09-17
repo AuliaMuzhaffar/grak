@@ -65,29 +65,32 @@ LABEL_STATS = os.path.join(PROCESSED_DIR, "label_stats.json")
 
 log = get_logger("05_labeling")
 
-# Cache precompiled regex patterns for short keywords (length <= 3)
-SHORT_KW_PATTERN = {}
+# Cache precompiled regex patterns for keywords (universal word boundary \b)
+KW_PATTERN_CACHE = {}
 
 def matches_keyword(kw: str, text_lower: str) -> bool:
     """
     Cek kecocokan kata kunci dalam teks.
-    Untuk kata pendek (<= 3 huruf seperti 'it', 'kur', 'bts', 'hub', 'ojk'),
-    wajib menggunakan batas kata (\b) agar tidak mencocokkan substring
-    di tengah kata lain (misal 'it' di 'terkait' atau 'aktivitas').
+    Semua kata kunci (baik kata tunggal maupun frasa majemuk) wajib menggunakan
+    batas kata (\b) agar tidak mencocokkan substring di dalam kata lain:
+    - 'uang' TIDAK cocok di 'peluang'
+    - 'dana' TIDAK cocok di 'perdana'
+    - 'it' TIDAK cocok di 'terkait' / 'aktivitas'
+    - 'usk' TIDAK cocok di 'termasuk' / 'fokuskan'
     """
-    kw_lower = kw.lower()
-    if len(kw_lower) <= 3:
-        if kw_lower not in SHORT_KW_PATTERN:
-            SHORT_KW_PATTERN[kw_lower] = re.compile(r'\b' + re.escape(kw_lower) + r'\b')
-        return bool(SHORT_KW_PATTERN[kw_lower].search(text_lower))
-    return kw_lower in text_lower
+    kw_lower = kw.lower().strip()
+    if not kw_lower:
+        return False
+    if kw_lower not in KW_PATTERN_CACHE:
+        KW_PATTERN_CACHE[kw_lower] = re.compile(r'\b' + re.escape(kw_lower) + r'\b', flags=re.IGNORECASE)
+    return bool(KW_PATTERN_CACHE[kw_lower].search(text_lower))
 
 
 # ============================================================
 # LABELING FUNCTIONS
 # ============================================================
 
-def score_topic(text: str) -> tuple[str, float, dict]:
+def score_topic(text: str) -> tuple[str, float, dict, str]:
     """
     Scoring topic berdasarkan keyword rules.
     
@@ -99,6 +102,7 @@ def score_topic(text: str) -> tuple[str, float, dict]:
         - topic: nama topic dengan score tertinggi (atau "unclassified")
         - score: score tertinggi
         - all_scores: dict semua topic dan scorenya
+        - tie_notes: catatan string jika terjadi skor imbang
     
     Scoring:
         strong keyword match = 3 poin
@@ -133,22 +137,23 @@ def score_topic(text: str) -> tuple[str, float, dict]:
         all_scores[topic_name] = score
     
     if not all_scores:
-        return "unclassified", 0, all_scores
+        return "unclassified", 0.0, all_scores, ""
     
     max_score = max(all_scores.values())
     
     # Check minimum threshold
     if max_score < TOPIC_MIN_SCORE:
-        return "unclassified", max_score, all_scores
+        return "unclassified", float(max_score), all_scores, ""
     
     # Check for ties among top topics (Opsi B: Active Learning)
     top_topics = [t for t, s in all_scores.items() if s == max_score]
     if len(top_topics) > 1:
-        # Terjadi persaingan seimbang -> ambigu -> serahkan ke human review
-        return "unclassified", max_score, all_scores
+        # Terjadi persaingan seimbang -> ambigu -> simpan info tie untuk annotator
+        tie_notes = "TIE: " + " vs ".join(f"{t}({max_score})" for t in top_topics)
+        return "unclassified", float(max_score), all_scores, tie_notes
     
     best_topic = top_topics[0]
-    return best_topic, max_score, all_scores
+    return best_topic, float(max_score), all_scores, ""
 
 
 def score_sentiment(text: str) -> tuple[str, int, int]:
@@ -190,16 +195,19 @@ def label_single_row(row: pd.Series) -> pd.Series:
     - sentiment_pos_count: jumlah positive matches
     - sentiment_neg_count: jumlah negative matches
     - sentiment_method: "auto" atau "needs_review"
+    - labeling_notes: catatan tie-break jika terjadi skor imbang
     """
     text = str(row.get("text", ""))
     
     # === Topic ===
-    topic, topic_score, _ = score_topic(text)
+    topic, topic_score, _, tie_notes = score_topic(text)
     
     if topic == "unclassified":
         topic_method = "needs_review"
+        notes = tie_notes
     else:
         topic_method = "auto"
+        notes = ""
     
     # === Sentiment ===
     sentiment, pos_count, neg_count = score_sentiment(text)
@@ -214,6 +222,7 @@ def label_single_row(row: pd.Series) -> pd.Series:
     result["sentiment_pos_count"] = pos_count
     result["sentiment_neg_count"] = neg_count
     result["sentiment_method"] = sentiment_method
+    result["labeling_notes"] = notes
     
     return result
 
@@ -263,8 +272,12 @@ def main():
                         "topic": str(r["topic"]).strip(),
                         "sentiment": str(r.get("sentiment", "")).strip() if pd.notna(r.get("sentiment")) else "",
                     }
-        except Exception:
-            pass
+        except Exception as e:
+            log.warning("Gagal membaca existing needs_review.csv", error=str(e))
+            if os.path.getsize(OUTPUT_NEEDS_REVIEW) > 1024:
+                print(f"❌ PERINGATAN KRITIS: Gagal membaca {OUTPUT_NEEDS_REVIEW} ({e}).")
+                print("   File memiliki data manual namun gagal dibaca. Abort untuk mencegah kehilangan data!")
+                return
             
     # 2. Cek dari input df itu sendiri
     if "topic" in df.columns:
@@ -334,7 +347,7 @@ def main():
     # 2. Precompute Title Scoring untuk fallback
     title_topics = {}
     for title in df_labeled["article_title"].dropna().unique():
-        t_topic, t_score, _ = score_topic(str(title))
+        t_topic, t_score, *_ = score_topic(str(title))
         if t_topic != "unclassified":
             title_topics[title] = (t_topic, float(t_score))
     
@@ -428,7 +441,16 @@ def main():
     # 5a. Full labeled dataset
     df_labeled[output_cols].to_csv(OUTPUT_LABELED, index=False, encoding="utf-8-sig")
     
-    # 5b. Needs review (topic kosong)
+    # 5b. Needs review (topic kosong) — buat auto-backup jika file existing ada isinya
+    if os.path.exists(OUTPUT_NEEDS_REVIEW) and os.path.getsize(OUTPUT_NEEDS_REVIEW) > 0:
+        backup_file = OUTPUT_NEEDS_REVIEW + ".bak"
+        try:
+            import shutil
+            shutil.copyfile(OUTPUT_NEEDS_REVIEW, backup_file)
+            log.info("Auto-backup needs_review.csv created", backup=backup_file)
+        except Exception as e:
+            log.warning("Gagal membuat auto-backup needs_review.csv", error=str(e))
+            
     df_review = df_labeled[df_labeled["topic_method"] == "needs_review"][output_cols]
     df_review.to_csv(OUTPUT_NEEDS_REVIEW, index=False, encoding="utf-8-sig")
     

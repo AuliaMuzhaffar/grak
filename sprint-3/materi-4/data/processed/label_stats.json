@@ -1,26 +1,26 @@
 {
   "total_rows": 13840,
-  "auto_labeled_total": 11978,
-  "auto_labeled_direct": 5973,
-  "auto_labeled_article_propagated": 5617,
-  "auto_labeled_title_propagated": 388,
-  "needs_review": 1862,
+  "auto_labeled_total": 11945,
+  "auto_labeled_direct": 5151,
+  "auto_labeled_article_propagated": 6431,
+  "auto_labeled_title_propagated": 363,
+  "needs_review": 1895,
   "manual_kept": 0,
-  "auto_label_pct": 86.5,
+  "auto_label_pct": 86.3,
   "topic_distribution": {
-    "digitalization": 2721,
-    "talent": 2115,
-    "funding": 1984,
-    "market_access": 1775,
-    "regulation": 1326,
-    "success_story": 1121,
-    "ecosystem": 676,
-    "infrastructure": 260
+    "digitalization": 3093,
+    "talent": 2370,
+    "funding": 1968,
+    "market_access": 1466,
+    "regulation": 1329,
+    "ecosystem": 768,
+    "success_story": 678,
+    "infrastructure": 273
   },
   "sentiment_distribution": {
-    "neutral": 11051,
-    "positive": 2584,
-    "negative": 205
+    "neutral": 11975,
+    "positive": 1774,
+    "negative": 91
   },
-  "generated_at": "2026-09-12 16:57:42"
+  "generated_at": "2026-09-12 17:43:51"
 }

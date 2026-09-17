@@ -1,9 +1,10 @@
 # ==============================================================================
-# 🚀 GRAK SPRINT 3 — PIPELINE MASTER MAKEFILE (FASE 1 & FASE 2)
+# 🚀 GRAK SPRINT 3 — PIPELINE MASTER MAKEFILE (FASE 1, FASE 2, & FASE 3)
 # ==============================================================================
 
 .PHONY: help smoke smoke-quick clean-smoke resolve extract full status logs \
-        test-dedup clean-data check-quality spot-check
+        test-dedup clean-data check-quality spot-check \
+        test-label-rules scan-collisions label-data check-label-quality spot-check-labels merge-labels
 
 PYTHON   := python3
 DATA_DIR := ../data
@@ -30,6 +31,14 @@ help:
 	@echo "  \033[1;37mmake clean-data\033[0m     : Jalankan 04_cleaning.py (pipeline pembersihan 6-tahap)"
 	@echo "  \033[1;37mmake check-quality\033[0m  : Validasi kepatuhan Quality Gate Fase 2"
 	@echo "  \033[1;37mmake spot-check\033[0m     : Tampilkan 10 sampel acak teks dataset bersih"
+	@echo ""
+	@echo "\033[1;32m🏷️  SEMI-AUTOMATIC LABELING (FASE 3):\033[0m"
+	@echo "  \033[1;37mmake test-label-rules\033[0m   : Unit test kamus aturan & regex boundary (trap cases)"
+	@echo "  \033[1;37mmake scan-collisions\033[0m    : Diagnostic scan potensi false positive substring korpus"
+	@echo "  \033[1;37mmake label-data\033[0m         : Jalankan 05_labeling.py (engine 2-pass cascading)"
+	@echo "  \033[1;37mmake check-label-quality\033[0m: Validasi kepatuhan Quality Gate Fase 3"
+	@echo "  \033[1;37mmake spot-check-labels\033[0m  : Tampilkan sampel acak berstrata dari hasil labeling"
+	@echo "  \033[1;37mmake merge-labels\033[0m       : Jalankan 06_merge_labels.py (produksi dataset final)"
 	@echo ""
 	@echo "\033[1;32m📊 MONITORING & PEMERIKSAAN DATA:\033[0m"
 	@echo "  \033[1;37mmake status\033[0m         : Cek ringkasan volume data mentah & bersih"
@@ -121,6 +130,106 @@ print('\033[1;36m===============================================================
 print('')"
 
 # ==============================================================================
+# FASE 3: SEMI-AUTOMATED LABELING, ACTIVE LEARNING, & QUALITY GATE
+# ==============================================================================
+
+test-label-rules:
+	@echo "\033[1;33m▶ [Fase 3] Menjalankan Unit Test Rules & Regex Boundary...\033[0m"
+	@$(PYTHON) -c "import importlib; \
+mod = importlib.import_module('05_labeling'); \
+matches_keyword = mod.matches_keyword; score_topic = mod.score_topic; \
+print('  • Menguji kecocokan kasus positif...'); \
+assert matches_keyword('uang', 'bantuan uang tunai untuk modal') == True, 'Gagal mencocokkan kata uang!'; \
+assert matches_keyword('it', 'pelatihan sektor IT dan digital') == True, 'Gagal mencocokkan akronim IT!'; \
+assert matches_keyword('kur', 'penyaluran KUR syariah BSI') == True, 'Gagal mencocokkan akronim KUR!'; \
+print('  • Menguji perangkap kasus negatif (False Positive Traps)...'); \
+assert matches_keyword('uang', 'peluang bisnis kopi gayo terbuka') == False, 'BOCOR: kata uang cocok di peluang!'; \
+assert matches_keyword('dana', 'peluncuran perdana produk umkm') == False, 'BOCOR: kata dana cocok di perdana!'; \
+assert matches_keyword('it', 'terkait dengan hal tersebut') == False, 'BOCOR: kata it cocok di terkait!'; \
+assert matches_keyword('it', 'peningkatan kualitas layanan') == False, 'BOCOR: kata it cocok di kualitas!'; \
+assert matches_keyword('it', 'aktivitas bisnis mulai normal') == False, 'BOCOR: kata it cocok di aktivitas!'; \
+assert matches_keyword('usk', 'termasuk mahasiswa dan dosen') == False, 'BOCOR: kata usk cocok di termasuk!'; \
+assert matches_keyword('beli', 'beliau menghadiri acara peresmian') == False, 'BOCOR: kata beli cocok di beliau!'; \
+print('  • Menguji deteksi skor imbang (Active Learning Tie-break)...'); \
+t, s, _, tie = score_topic('pelatihan programmer dan investasi modal'); \
+assert t == 'unclassified' and 'TIE:' in tie, 'Gagal mendeteksi persaingan skor imbang!'; \
+print('\033[1;32m✅ Seluruh Unit Test Rules & Regex Boundary Lolos 100% Bebas Bocor!\033[0m')"
+
+scan-collisions:
+	@echo "\033[1;33m▶ [Fase 3] Menjalankan Reverse Vocabulary Collision Scanner...\033[0m"
+	@$(PYTHON) -c "import os, re, pandas as pd; from labeling_rules import TOPIC_RULES; \
+clean_file = os.path.join('$(PROCESSED_DIR)', 'public_text_news_clean.csv'); \
+assert os.path.exists(clean_file), 'File dataset bersih belum ada!'; \
+df = pd.read_csv(clean_file); \
+tokens = set(re.findall(r'\b[a-z]{3,}\b', ' '.join(df['text'].dropna().astype(str).str.lower()))); \
+all_kws = list(set([k.lower().strip() for t in TOPIC_RULES.values() for tr in ['strong','medium','weak'] for k in t[tr] if ' ' not in k and len(k) <= 5])); \
+collisions = {kw: [t for t in tokens if kw in t and t != kw][:5] for kw in all_kws if any(kw in t and t != kw for t in tokens)}; \
+print(f'  • Total kosakata unik di korpus : {len(tokens):,} kata'); \
+print(f'  • Kata kunci rentan collision   : {len(collisions)} kata'); \
+print('  • Sampel jebakan yang berhasil ditangkal boundary regex \\\b:'); \
+[print(f'    - \"{kw}\" terlindungi dari: {words}') for kw, words in sorted(collisions.items(), key=lambda x: len(x[1]), reverse=True)[:6]]; \
+print('\033[1;32m✅ Scanning selesai: Seluruh collision diamankan oleh word boundary regex!\033[0m')"
+
+label-data:
+	@echo "\033[1;33m▶ [Fase 3] Menjalankan Engine Labeling 2-Pass Cascading (05_labeling.py)...\033[0m"
+	@$(PYTHON) 05_labeling.py
+
+check-label-quality:
+	@$(PYTHON) -c "import os, json, pandas as pd; \
+stats_file = os.path.join('$(PROCESSED_DIR)', 'label_stats.json'); \
+labeled_file = os.path.join('$(PROCESSED_DIR)', 'labeled_dataset.csv'); \
+assert os.path.exists(stats_file) and os.path.exists(labeled_file), 'File output labeling belum ada! Jalankan make label-data'; \
+stats = json.load(open(stats_file, 'r')); \
+df = pd.read_csv(labeled_file); \
+total = stats['total_rows']; \
+auto_pct = stats['auto_label_pct']; \
+needs_rev_pct = round(stats['needs_review'] / total * 100, 1); \
+topics = stats['topic_distribution']; \
+max_topic = max(topics.values()) / total * 100; \
+min_topic = min(topics.values()) / total * 100; \
+sents = stats['sentiment_distribution']; \
+pos_neu_pct = (sents.get('positive', 0) + sents.get('neutral', 0)) / total * 100; \
+prov_valid = df['topic_method'].isin(['auto', 'article_propagated', 'title_propagated', 'needs_review', 'manual']).all(); \
+print(''); \
+print('\033[1;36m======================================================================\033[0m'); \
+print('\033[1;33m📋 LAPORAN QUALITY GATE FASE 3 (labeled_dataset.csv)                  \033[0m'); \
+print('\033[1;36m======================================================================\033[0m'); \
+metrics = [ \
+    ('Cakupan Auto-label', f'{auto_pct:.1f}% ({stats[\"auto_labeled_total\"]:,})', '>= 70.0%', auto_pct >= 70.0), \
+    ('Batas Maksimal Ambigu', f'{needs_rev_pct:.1f}% ({stats[\"needs_review\"]:,})', '<= 20.0%', needs_rev_pct <= 20.0), \
+    ('Batas Skew Topik Tertinggi', f'{max_topic:.1f}% ({list(topics.keys())[0]})', '<= 30.0%', max_topic <= 30.0), \
+    ('Representasi Topik Terkecil', f'{min_topic:.1f}% (8 topik ada)', '>= 1.0%', min_topic >= 1.0 and len(topics) == 8), \
+    ('Kewajaran Sentimen (Pos+Net)', f'{pos_neu_pct:.1f}%', '>= 70.0%', pos_neu_pct >= 70.0), \
+    ('Integritas Metode Provenance', '100% Valid' if prov_valid else 'Ada Invalid', '100%', prov_valid) \
+]; \
+[print(f'  • {l:<29} : {a:<22} (Target: {t:<9}) {\"\033[1;32m✅ PASS\033[0m\" if ok else \"\033[1;31m❌ FAIL\033[0m\"}') for l, a, t, ok in metrics]; \
+all_ok = all(ok for _, _, _, ok in metrics); \
+print('\033[1;36m----------------------------------------------------------------------\033[0m'); \
+print('\033[1;32m🏆 KESIMPULAN: SELURUH QUALITY GATE FASE 3 TERPENUHI SEMPURNA!\033[0m' if all_ok else '\033[1;31m⚠️ KESIMPULAN: ADA METRIK YANG BELUM MEMENUHI KRITERIA!\033[0m'); \
+print('\033[1;36m======================================================================\033[0m'); \
+print('')"
+
+spot-check-labels:
+	@$(PYTHON) -c "import os, pandas as pd; \
+labeled_file = os.path.join('$(PROCESSED_DIR)', 'labeled_dataset.csv'); \
+assert os.path.exists(labeled_file), 'File labeled_dataset.csv belum ada! Jalankan make label-data'; \
+df = pd.read_csv(labeled_file); \
+samples = [df[df['topic_method'] == m].sample(min(2, (df['topic_method'] == m).sum()), random_state=42) for m in ['auto', 'article_propagated', 'title_propagated', 'needs_review'] if (df['topic_method'] == m).sum() > 0]; \
+sample_df = pd.concat(samples).reset_index(drop=True); \
+print(''); \
+print('\033[1;36m======================================================================\033[0m'); \
+print('\033[1;33m🔍 SPOT CHECK: SAMPEL HASIL LABELING BERSTRATA (FASE 3)                \033[0m'); \
+print('\033[1;36m======================================================================\033[0m'); \
+badge = {'auto': '\033[1;32m[AUTO-DIRECT]\033[0m', 'article_propagated': '\033[1;34m[ARTICLE-PROP]\033[0m', 'title_propagated': '\033[1;35m[TITLE-PROP]\033[0m', 'needs_review': '\033[1;33m[NEEDS-REVIEW]\033[0m'}; \
+[print(f'[{i}] {badge.get(r[\"topic_method\"], r[\"topic_method\"])} Topik: \033[1;37m{str(r[\"topic\"]) if pd.notna(r[\"topic\"]) and r[\"topic\"] != \"\" else \"(unclassified)\"}\033[0m (Skor: {r[\"topic_score\"]}) Sentimen: {r[\"sentiment\"]}\n    Judul : {str(r[\"article_title\"])[:80]}...\n    Teks  : \"{str(r[\"text\"])[:120]}...\"\n    Notes : {r[\"labeling_notes\"] if pd.notna(r[\"labeling_notes\"]) and r[\"labeling_notes\"] != \"\" else \"-\"}\n') for i, (_, r) in enumerate(sample_df.iterrows(), 1)]; \
+print('\033[1;36m======================================================================\033[0m'); \
+print('')"
+
+merge-labels:
+	@echo "\033[1;33m▶ [Fase 3] Menjalankan Konsolidasi Dataset Final (06_merge_labels.py)...\033[0m"
+	@$(PYTHON) 06_merge_labels.py
+
+# ==============================================================================
 # MONITORING & OBSERVABILITAS
 # ==============================================================================
 
@@ -135,16 +244,26 @@ res = os.path.join(d, 'resolved_urls.csv'); \
 db = os.path.join(d, 'articles_database.csv'); \
 para_raw = os.path.join(d, 'paragraphs_raw.csv'); \
 para_clean = os.path.join(pd_dir, 'public_text_news_clean.csv'); \
+auto_file = os.path.join(pd_dir, 'auto_labeled.csv'); \
+review_file = os.path.join(pd_dir, 'needs_review.csv'); \
+final_file = os.path.join(pd_dir, 'labeled_dataset_final.csv'); \
 fail = os.path.join(d, 'failed_urls.csv'); \
 n_raw = len(pd.read_csv(para_raw)) if os.path.exists(para_raw) else 0; \
 n_clean = len(pd.read_csv(para_clean)) if os.path.exists(para_clean) else 0; \
+n_auto = len(pd.read_csv(auto_file)) if os.path.exists(auto_file) else 0; \
+n_rev = len(pd.read_csv(review_file)) if os.path.exists(review_file) else 0; \
+n_final = len(pd.read_csv(final_file)) if os.path.exists(final_file) else 0; \
 reduct = round((1 - n_clean / n_raw) * 100, 1) if n_raw > 0 and n_clean > 0 else 0; \
-print(f'  • Discovery Articles : {len(pd.read_csv(disc)) if os.path.exists(disc) else 0} URL'); \
-print(f'  • Resolved URLs      : {len(pd.read_csv(res)) if os.path.exists(res) else 0} URL'); \
-print(f'  • Articles Database  : {len(pd.read_csv(db)) if os.path.exists(db) else 0} artikel'); \
+auto_pct = round((n_auto / n_clean) * 100, 1) if n_clean > 0 and n_auto > 0 else 0; \
+print(f'  • Discovery Articles        : {len(pd.read_csv(disc)) if os.path.exists(disc) else 0} URL'); \
+print(f'  • Resolved URLs             : {len(pd.read_csv(res)) if os.path.exists(res) else 0} URL'); \
+print(f'  • Articles Database         : {len(pd.read_csv(db)) if os.path.exists(db) else 0} artikel'); \
 print(f'  • Paragraphs Raw (Fase 1)   : {n_raw:,} paragraf'); \
 print(f'  • Paragraphs Clean (Fase 2) : {n_clean:,} paragraf (Dibersihkan: {reduct}%)'); \
-print(f'  • Failed URLs        : {len(pd.read_csv(fail)) if os.path.exists(fail) else 0} URL')"
+print(f'  • Auto-labeled (Fase 3)     : {n_auto:,} paragraf ({auto_pct}%)'); \
+print(f'  • Needs Review (Fase 3)     : {n_rev:,} paragraf'); \
+print(f'  • Dataset Final (Fase 3)    : {n_final:,} paragraf'); \
+print(f'  • Failed URLs               : {len(pd.read_csv(fail)) if os.path.exists(fail) else 0} URL')"
 	@echo ""
 
 logs:

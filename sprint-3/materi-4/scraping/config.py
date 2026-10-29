@@ -14,13 +14,15 @@ import os
 # Base directory (folder "data" di sebelah folder "scraping")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
+PROCESSED_DIR = os.path.join(DATA_DIR, "processed")
 
 # Output files
 DISCOVERY_CSV = os.path.join(DATA_DIR, "discovery_articles.csv")
 ARTICLES_DB_CSV = os.path.join(DATA_DIR, "articles_database.csv")       # 1 baris = 1 artikel (referensi)
 PARAGRAPHS_RAW_CSV = os.path.join(DATA_DIR, "paragraphs_raw.csv")      # 1 baris = 1 paragraf (dataset mentah)
-PARAGRAPHS_CLEAN_CSV = os.path.join(DATA_DIR, "public_text_news_clean.csv")  # Dataset final ✅
+PARAGRAPHS_CLEAN_CSV = os.path.join(PROCESSED_DIR, "public_text_news_clean.csv")  # Dataset final ✅
 FAILED_URLS_CSV = os.path.join(DATA_DIR, "failed_urls.csv")
+SOCIAL_RAW_CSV = os.path.join(DATA_DIR, "dataset_aceh_sprint3.csv")
 
 # ============================================================
 # HTTP — Headers untuk request

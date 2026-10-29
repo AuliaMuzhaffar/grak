@@ -1,0 +1,8 @@
+tahap,volume,keterangan
+1. Discovery Artikel,1350,1.350 artikel ditemukan via Google News & RSS
+2. Resolusi URL,1347,1.347 URL aktif (746 percobaan gagal ditangani fallback)
+3. Ekstraksi Artikel,1231,1231 artikel diekstrak dari 243 media online
+4. Pembersihan & Dedup,13840,13.840 paragraf bersih setelah dedup teks & boilerplate
+5. Ingestion Shield,6648,7192 paragraf out-of-domain dibuang
+6. Relevan Domain,6648,6.648 paragraf berita seputar ekosistem bisnis/startup
+7. Triangulasi 4 Sumber,7097,"+311 sosmed, +113 wawancara, +25 survei = 7.097 unit"

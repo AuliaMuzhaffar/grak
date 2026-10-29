@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsitektur Pelabelan Data</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #161b22;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Arsitektur Ingestion Shield V2 & Pelabelan</h1>
+        <div class="mermaid">
+            flowchart TD
+            %% Styling
+            classDef dataset fill:#238636,stroke:#2ea043,stroke-width:2px,color:white;
+            classDef process fill:#1f6feb,stroke:#388bfd,stroke-width:2px,color:white;
+            classDef decision fill:#d29922,stroke:#e3b341,stroke-width:2px,color:black;
+            classDef dropped fill:#da3633,stroke:#f85149,stroke-width:2px,color:white;
+            classDef golden fill:#8957e5,stroke:#a371f7,stroke-width:2px,color:white;
+
+            %% Nodes
+            A["Dataset Mentah<br>(public_text_news_clean.csv)"]:::dataset
+
+            subgraph Pass1 [Fase 3: 05_labeling.py - Per Baris]
+            B{"Cek Nilai<br>aceh_confidence"}:::decision
+
+            C{"Ada Keyword<br>Ekosistem?"}:::decision
+
+            D1["Force Label:<br>out_of_domain"]:::dropped
+
+            D2["score_topic(text)<br>& score_sentiment(text)"]:::process
+            end
+
+            subgraph Pass2 [Fase 3: 05_labeling.py - Konteks]
+            E{"Mayoritas Paragraf<br>adalah out_of_domain?"}:::decision
+
+            F["Propagasi Label:<br>Timpa jadi out_of_domain"]:::dropped
+            G["Pertahankan<br>Label Asli"]:::process
+            end
+
+            subgraph FaseMerge [Fase Gabungan: 11_merge_all_sources.py]
+            H{"Apakah Topic ==<br>out_of_domain?"}:::decision
+
+            I["Tolak & Buang<br>(7.192 Paragraf)"]:::dropped
+            J["Golden Dataset<br>(7.097 Paragraf)"]:::golden
+            end
+
+            %% Flow
+            A --> B
+            B -- "Low" --> D1
+            B -- "Medium" --> C
+            B -- "High" --> D2
+
+            C -- "Tidak Ada" --> D1
+            C -- "Minimal 1" --> D2
+
+            D1 --> E
+            D2 --> E
+
+            E -- "Ya (>50%)" --> F
+            E -- "Tidak" --> G
+
+            F --> H
+            G --> H
+
+            H -- "Ya" --> I
+            H -- "Tidak (Valid)" --> J
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            flowchart: { htmlLabels: true }
+        });
+    </script>
+</body>
+
+</html>

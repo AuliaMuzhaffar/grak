@@ -3,3 +3,18 @@
 
 # Editor settings
 .vscode/
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Raw files containing PII (WhatsApp / Email / Unmasked Usernames)
+materi-4/data/*Survey*Responses*.csv
+materi-4/data/dataset_aceh_sprint3.csv
+materi-4/data/*.docx
+archive/teammate_sprint3_final/*Survey*Responses*.csv
+archive/teammate_sprint3_final/dataset_aceh_sprint3.csv
+archive/teammate_sprint3_final/dataset_aceh_sprint3.xlsx

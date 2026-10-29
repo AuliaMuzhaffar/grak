@@ -48,6 +48,7 @@ from lib.logger import get_logger
 from labeling_rules import (
     TOPIC_RULES, SENTIMENT_RULES,
     TOPIC_MIN_SCORE, SENTIMENT_MIN_MATCHES,
+    ECOSYSTEM_KEYWORDS
 )
 
 # Paths
@@ -58,7 +59,6 @@ DATA_DIR = os.path.join(
 PROCESSED_DIR = os.path.join(DATA_DIR, "processed")
 
 INPUT_CSV = os.path.join(PROCESSED_DIR, "public_text_news_clean.csv")
-OUTPUT_LABELED = os.path.join(PROCESSED_DIR, "labeled_dataset.csv")
 OUTPUT_NEEDS_REVIEW = os.path.join(PROCESSED_DIR, "needs_review.csv")
 OUTPUT_AUTO_LABELED = os.path.join(PROCESSED_DIR, "auto_labeled.csv")
 LABEL_STATS = os.path.join(PROCESSED_DIR, "label_stats.json")
@@ -198,6 +198,27 @@ def label_single_row(row: pd.Series) -> pd.Series:
     - labeling_notes: catatan tie-break jika terjadi skor imbang
     """
     text = str(row.get("text", ""))
+    confidence = str(row.get("aceh_confidence", "high"))
+    
+    # === Domain Validation (Ingestion Shield V2) ===
+    is_valid = False
+    if confidence == "high":
+        is_valid = True
+    elif confidence == "medium":
+        text_lower = text.lower()
+        is_valid = any(kw in text_lower for kw in ECOSYSTEM_KEYWORDS)
+        
+    if not is_valid:
+        result = row.copy()
+        result["topic"] = "out_of_domain"
+        result["topic_score"] = 0.0
+        result["topic_method"] = "auto"
+        result["sentiment"] = "out_of_domain"
+        result["sentiment_pos_count"] = 0
+        result["sentiment_neg_count"] = 0
+        result["sentiment_method"] = "auto"
+        result["labeling_notes"] = "Dropped by Ingestion Shield V2"
+        return result
     
     # === Topic ===
     topic, topic_score, _, tie_notes = score_topic(text)
@@ -438,10 +459,7 @@ def main():
         if col not in df_labeled.columns:
             df_labeled[col] = ""
     
-    # 5a. Full labeled dataset
-    df_labeled[output_cols].to_csv(OUTPUT_LABELED, index=False, encoding="utf-8-sig")
-    
-    # 5b. Needs review (topic kosong) — buat auto-backup jika file existing ada isinya
+    # 5a. Needs review (topic kosong) — buat auto-backup jika file existing ada isinya
     if os.path.exists(OUTPUT_NEEDS_REVIEW) and os.path.getsize(OUTPUT_NEEDS_REVIEW) > 0:
         backup_file = OUTPUT_NEEDS_REVIEW + ".bak"
         try:
@@ -470,7 +488,6 @@ def main():
         "auto_label_pct": round(total_auto_labeled / total * 100, 1),
         "topic_distribution": topic_counts.to_dict(),
         "sentiment_distribution": sentiment_counts.to_dict(),
-        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
     
     with open(LABEL_STATS, "w", encoding="utf-8") as f:
@@ -481,7 +498,6 @@ def main():
     print("✅ LABELING SELESAI!")
     print("=" * 65)
     print()
-    print(f"📁 Full dataset    : {OUTPUT_LABELED}")
     print(f"📁 Needs review    : {OUTPUT_NEEDS_REVIEW} ({len(df_review)} baris)")
     print(f"📁 Auto-labeled    : {OUTPUT_AUTO_LABELED} ({len(df_auto)} baris)")
     print(f"📁 Label stats     : {LABEL_STATS}")

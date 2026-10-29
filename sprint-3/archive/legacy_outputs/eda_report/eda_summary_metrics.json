@@ -1,0 +1,87 @@
+{
+  "dataset_summary": {
+    "total_records": 7097,
+    "sources": {
+      "scraping": 6648,
+      "social_media": 311,
+      "interview": 113,
+      "survey": 25
+    },
+    "topics": {
+      "digitalization": 1587,
+      "ecosystem": 1368,
+      "funding": 1087,
+      "talent": 1051,
+      "regulation": 731,
+      "market_access": 715,
+      "success_story": 355,
+      "infrastructure": 203
+    },
+    "sentiments": {
+      "neutral": 5629,
+      "positive": 1335,
+      "negative": 133
+    },
+    "mean_word_count": 34.31,
+    "median_word_count": 31
+  },
+  "survey_summary": {
+    "n_respondents": 12,
+    "likert_means": {
+      "persepsi_ekosistem": 2.58,
+      "persepsi_pendanaan": 1.42,
+      "persepsi_mentor": 2.08,
+      "persepsi_pemerintah": 1.67,
+      "persepsi_optimis": 3.08,
+      "persepsi_infra": 2.92
+    },
+    "operational_means": {
+      "kemungkinan_bertahan": 4.08,
+      "kemudahan_talent": 3.0,
+      "kemudahan_pasar": 3.75
+    }
+  },
+  "triangulation_summary": {
+    "total_hypotheses": 6,
+    "supported_hypotheses": 6,
+    "convergence_rate_pct": 100.0,
+    "hypotheses": [
+      {
+        "hypothesis": "H1",
+        "hypothesis_title": "Akses Pendanaan Khusus Startup",
+        "convergence": "SUPPORTED",
+        "strength": "4/4 Sumber Konvergen (Sangat Kuat)"
+      },
+      {
+        "hypothesis": "H2",
+        "hypothesis_title": "Kesenjangan Ketersediaan Talent Digital",
+        "convergence": "SUPPORTED",
+        "strength": "4/4 Sumber Konvergen (Sangat Kuat)"
+      },
+      {
+        "hypothesis": "H3",
+        "hypothesis_title": "Ketergantungan Anchor Institution Luar Banda Aceh",
+        "convergence": "SUPPORTED",
+        "strength": "4/4 Sumber Konvergen (Sangat Kuat)"
+      },
+      {
+        "hypothesis": "H4",
+        "hypothesis_title": "Kelemahan Tindak Lanjut (Follow-up) Program",
+        "convergence": "SUPPORTED",
+        "strength": "4/4 Sumber Konvergen (Sangat Kuat)"
+      },
+      {
+        "hypothesis": "H5",
+        "hypothesis_title": "Hambatan Akses Pasar Lokal & Kebutuhan Ekspansi",
+        "convergence": "SUPPORTED",
+        "strength": "4/4 Sumber Konvergen (Sangat Kuat)"
+      },
+      {
+        "hypothesis": "H6",
+        "hypothesis_title": "Ketimpangan Dukungan (Digital Marketing > Product R&D)",
+        "convergence": "SUPPORTED",
+        "strength": "4/4 Sumber Konvergen (Sangat Kuat)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "generated_at": "2026-10-09",
+    "description": "Verified metrics computed directly from raw and processed datasets."
+  },
+  "data_funnel": {
+    "discovery_articles": 1350,
+    "resolved_urls": 1347,
+    "failed_attempts": 746,
+    "articles_extracted": 1231,
+    "unique_portals": 243,
+    "raw_paragraphs": 14818,
+    "cleaned_dedup_paragraphs": 13840,
+    "out_of_domain_rejected": 7192,
+    "news_relevant_paragraphs": 6648,
+    "social_media_units": 311,
+    "interview_units": 113,
+    "survey_text_units": 25,
+    "total_analyzed_units": 7097
+  },
+  "sentiment_by_source": {
+    "news": {
+      "total": 6648,
+      "counts": {
+        "negative": 34,
+        "neutral": 5399,
+        "positive": 1215
+      },
+      "pct": {
+        "negative": 0.51,
+        "neutral": 81.21,
+        "positive": 18.28
+      }
+    },
+    "social_media": {
+      "total": 311,
+      "counts": {
+        "negative": 35,
+        "neutral": 196,
+        "positive": 80
+      },
+      "pct": {
+        "negative": 11.25,
+        "neutral": 63.02,
+        "positive": 25.72
+      }
+    },
+    "interview": {
+      "total": 113,
+      "counts": {
+        "negative": 34,
+        "neutral": 51,
+        "positive": 28
+      },
+      "pct": {
+        "negative": 30.09,
+        "neutral": 45.13,
+        "positive": 24.78
+      }
+    },
+    "survey": {
+      "total": 25,
+      "counts": {
+        "negative": 16,
+        "neutral": 4,
+        "positive": 5
+      },
+      "pct": {
+        "negative": 64.0,
+        "neutral": 16.0,
+        "positive": 20.0
+      }
+    }
+  },
+  "survey_metrics": {
+    "n_respondents": 12,
+    "funding": {
+      "unfunded_count": 10,
+      "unfunded_pct": 83.3,
+      "funded_count": 2,
+      "funded_pct": 16.7,
+      "revenue_or_scaling_total": 7,
+      "revenue_or_scaling_pct": 58.3,
+      "unfunded_with_revenue_count": 6,
+      "unfunded_with_revenue_pct_of_all": 50.0,
+      "unfunded_with_revenue_pct_of_revenue_startups": 85.7
+    },
+    "incubation": {
+      "incubated_count": 5,
+      "not_incubated_count": 7,
+      "followup_distribution": {
+        "Tidak ada sama sekali": 4,
+        "Ada, berkelanjutan": 1,
+        "Ada, tapi terbatas": 1
+      },
+      "no_followup_among_respondents": 4
+    },
+    "challenges": {
+      "rank1_top": {
+        "Akses Pendanaan": 6,
+        "Ketersediaan Talent/SDM": 2,
+        "Distraksi": 1,
+        "Infrastruktur Teknologi": 1,
+        "Lainnya": 1,
+        "Akses Pasar": 1
+      },
+      "top3_overall": {
+        "Akses Pendanaan": 6,
+        "Ketersediaan Talent/SDM": 5,
+        "Regulasi & Perizinan": 4,
+        "Infrastruktur Teknologi": 3,
+        "Akses Pasar": 3,
+        "Customer Acquisition": 2,
+        "Akses Mentoring": 2,
+        "Product Development": 2,
+        "Distraksi": 1,
+        "Lainnya": 1,
+        "tidak fokus": 1,
+        "database": 1,
+        "Networking & Koneksi": 1
+      }
+    },
+    "likert_metrics": {
+      "kemungkinan_bertahan": {
+        "label": "Keyakinan Bertahan Hidup",
+        "mean": 4.08,
+        "median": 5.0,
+        "std": 1.38,
+        "low_score_count_le2": 2,
+        "high_score_count_ge4": 9
+      },
+      "kemudahan_pasar": {
+        "label": "Kemudahan Akses Pasar",
+        "mean": 3.75,
+        "median": 4.0,
+        "std": 1.06,
+        "low_score_count_le2": 2,
+        "high_score_count_ge4": 8
+      },
+      "kemudahan_talent": {
+        "label": "Kemudahan Mencari Talenta",
+        "mean": 3.0,
+        "median": 3.0,
+        "std": 1.13,
+        "low_score_count_le2": 3,
+        "high_score_count_ge4": 5
+      },
+      "persepsi_optimis": {
+        "label": "Optimisme Masa Depan",
+        "mean": 3.08,
+        "median": 3.0,
+        "std": 1.56,
+        "low_score_count_le2": 4,
+        "high_score_count_ge4": 5
+      },
+      "persepsi_infra": {
+        "label": "Kualitas Infrastruktur",
+        "mean": 2.92,
+        "median": 3.0,
+        "std": 0.79,
+        "low_score_count_le2": 4,
+        "high_score_count_ge4": 3
+      },
+      "persepsi_ekosistem": {
+        "label": "Kondisi Ekosistem Startup",
+        "mean": 2.58,
+        "median": 2.5,
+        "std": 1.24,
+        "low_score_count_le2": 6,
+        "high_score_count_ge4": 4
+      },
+      "persepsi_mentor": {
+        "label": "Ketersediaan Mentor & Panutan",
+        "mean": 2.08,
+        "median": 2.0,
+        "std": 0.79,
+        "low_score_count_le2": 8,
+        "high_score_count_ge4": 0
+      },
+      "persepsi_pemerintah": {
+        "label": "Dukungan Pemerintah",
+        "mean": 1.67,
+        "median": 1.5,
+        "std": 0.78,
+        "low_score_count_le2": 10,
+        "high_score_count_ge4": 0
+      },
+      "persepsi_pendanaan": {
+        "label": "Kemudahan Akses Pendanaan",
+        "mean": 1.42,
+        "median": 1.0,
+        "std": 0.67,
+        "low_score_count_le2": 11,
+        "high_score_count_ge4": 0
+      }
+    }
+  },
+  "keyword_metrics": {
+    "news": {
+      "unique_articles": 900,
+      "matches": {
+        "seremoni": {
+          "matching_articles": 108,
+          "pct_of_articles": 12.0
+        },
+        "pelatihan": {
+          "matching_articles": 300,
+          "pct_of_articles": 33.3
+        },
+        "event_any": {
+          "matching_articles": 405,
+          "pct_of_articles": 45.0
+        },
+        "outcome": {
+          "matching_articles": 124,
+          "pct_of_articles": 13.8
+        },
+        "umkm": {
+          "matching_articles": 330,
+          "pct_of_articles": 36.7
+        },
+        "startup": {
+          "matching_articles": 77,
+          "pct_of_articles": 8.6
+        },
+        "kredit": {
+          "matching_articles": 117,
+          "pct_of_articles": 13.0
+        },
+        "equity": {
+          "matching_articles": 68,
+          "pct_of_articles": 7.6
+        },
+        "pemerintah": {
+          "matching_articles": 503,
+          "pct_of_articles": 55.9
+        }
+      },
+      "ratio_umkm_to_startup": 4.29,
+      "ratio_event_to_outcome": 3.27
+    },
+    "social_media": {
+      "total_units": 311,
+      "remote_work_mentions": 9,
+      "investor_vc_mentions": 34,
+      "infrastructure": {
+        "total_units": 42,
+        "negative_units": 25,
+        "negative_pct": 59.5,
+        "work_business_related_units": 12
+      }
+    }
+  },
+  "topic_distribution": {
+    "counts": {
+      "digitalization": {
+        "interview": 14,
+        "news": 1526,
+        "social_media": 45,
+        "survey": 0
+      },
+      "ecosystem": {
+        "interview": 26,
+        "news": 1247,
+        "social_media": 90,
+        "survey": 8
+      },
+      "funding": {
+        "interview": 17,
+        "news": 1017,
+        "social_media": 45,
+        "survey": 6
+      },
+      "infrastructure": {
+        "interview": 1,
+        "news": 159,
+        "social_media": 42,
+        "survey": 1
+      },
+      "market_access": {
+        "interview": 26,
+        "news": 632,
+        "social_media": 45,
+        "survey": 4
+      },
+      "regulation": {
+        "interview": 2,
+        "news": 725,
+        "social_media": 0,
+        "survey": 4
+      },
+      "success_story": {
+        "interview": 3,
+        "news": 354,
+        "social_media": 0,
+        "survey": 0
+      },
+      "talent": {
+        "interview": 24,
+        "news": 988,
+        "social_media": 44,
+        "survey": 2
+      }
+    },
+    "normalized_pct": {
+      "digitalization": {
+        "interview": 12.39,
+        "news": 22.95,
+        "social_media": 14.47,
+        "survey": 0.0
+      },
+      "ecosystem": {
+        "interview": 23.01,
+        "news": 18.76,
+        "social_media": 28.94,
+        "survey": 32.0
+      },
+      "funding": {
+        "interview": 15.04,
+        "news": 15.3,
+        "social_media": 14.47,
+        "survey": 24.0
+      },
+      "infrastructure": {
+        "interview": 0.88,
+        "news": 2.39,
+        "social_media": 13.5,
+        "survey": 4.0
+      },
+      "market_access": {
+        "interview": 23.01,
+        "news": 9.51,
+        "social_media": 14.47,
+        "survey": 16.0
+      },
+      "regulation": {
+        "interview": 1.77,
+        "news": 10.91,
+        "social_media": 0.0,
+        "survey": 16.0
+      },
+      "success_story": {
+        "interview": 2.65,
+        "news": 5.32,
+        "social_media": 0.0,
+        "survey": 0.0
+      },
+      "talent": {
+        "interview": 21.24,
+        "news": 14.86,
+        "social_media": 14.15,
+        "survey": 8.0
+      }
+    }
+  },
+  "evidence_matrix": {
+    "Insight 1 (Paling Terlihat, Paling Tidak Dipercaya)": {
+      "strength": "Kuat",
+      "sources": [
+        "Berita",
+        "Survei",
+        "Wawancara"
+      ],
+      "key_metric": "Gov exposure 55.9% vs trust 1.67/5, rasio seremoni:hasil 3.3:1"
+    },
+    "Insight 2 (Ekosistem Startup rasa UMKM)": {
+      "strength": "Sedang–Kuat",
+      "sources": [
+        "Berita",
+        "Wawancara",
+        "Survei"
+      ],
+      "key_metric": "UMKM disebut 4.3x lebih banyak dari startup (330 vs 77 artikel)"
+    },
+    "Insight 3 (Tumbuh Tanpa Modal, Tapi Lambat)": {
+      "strength": "Kuat",
+      "sources": [
+        "Survei",
+        "Wawancara"
+      ],
+      "key_metric": "83% unfunded, tapi 6/7 ber-revenue tanpa modal; keyakinan 4.08 vs ekosistem 2.58"
+    },
+    "Insight 4 (Jurang Pasca-Hibah)": {
+      "strength": "Sedang",
+      "sources": [
+        "Wawancara",
+        "Survei",
+        "Berita"
+      ],
+      "key_metric": "PST vakum pasca-kontrak; 4/6 responden penerima program tanpa tindak lanjut (66,7%); hasil berita hanya 13.8%"
+    },
+    "Insight 5 (Defisit Talenta Mendalam & Panutan)": {
+      "strength": "Sedang",
+      "sources": [
+        "Wawancara",
+        "Survei"
+      ],
+      "key_metric": "Talent top-3 challenge (5/12); mentor 2.08/5; SuratPlus: mentor hijrah ke Jakarta"
+    },
+    "Insight 6 (Pasarnya Ada, Tapi Bukan di Aceh)": {
+      "strength": "Sedang–Kuat",
+      "sources": [
+        "Wawancara",
+        "Survei"
+      ],
+      "key_metric": "SuratPlus 200.000+ user terdaftar (1,8 juta kunjungan web) di 250 kota (Banda Aceh #30); kemudahan pasar 3.75 tapi lokal enggan bayar"
+    },
+    "Temuan Emergen (Ketergantungan Kampus & Infrastruktur)": {
+      "strength": "Indikatif (Studi Kasus)",
+      "sources": [
+        "Wawancara",
+        "Sosmed"
+      ],
+      "key_metric": "PST n=1 luar BA; sosmed infra 59.5% negatif tapi hanya 12 unit terkait kerja"
+    }
+  }
+}

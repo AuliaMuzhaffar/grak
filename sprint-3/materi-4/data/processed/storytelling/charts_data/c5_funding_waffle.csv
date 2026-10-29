@@ -1,0 +1,13 @@
+id,fund,status,label
+1,Tidak Pernah Didanai,Sudah punya revenue,Bootstrap + Revenue
+2,Tidak Pernah Didanai,Sudah punya revenue,Bootstrap + Revenue
+3,Tidak Pernah Didanai,Sudah punya revenue,Bootstrap + Revenue
+4,Tidak Pernah Didanai,Sudah punya revenue,Bootstrap + Revenue
+5,Tidak Pernah Didanai,Sudah scaling,Bootstrap + Scaling
+6,Tidak Pernah Didanai,Sudah scaling,Bootstrap + Scaling
+7,Tidak Pernah Didanai,Sudah punya produk/MVP,Bootstrap + MVP
+8,Tidak Pernah Didanai,Sudah punya produk/MVP,Bootstrap + MVP
+9,Tidak Pernah Didanai,Sudah punya produk/MVP,Bootstrap + MVP
+10,Tidak Pernah Didanai,Masih ideation,Bootstrap + Ideation
+11,Pernah Didanai,Sudah punya revenue,Didanai + Revenue
+12,Pernah Didanai,Sudah tidak aktif,Didanai + Tidak Aktif

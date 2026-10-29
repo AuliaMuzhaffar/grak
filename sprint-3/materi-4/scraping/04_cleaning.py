@@ -42,9 +42,6 @@ PROCESSED_DIR = os.path.join(DATA_DIR, "processed")
 CLEAN_CSV = os.path.join(PROCESSED_DIR, "public_text_news_clean.csv")
 QUALITY_REPORT = os.path.join(PROCESSED_DIR, "quality_report.json")
 
-# Juga tetap simpan di lokasi lama untuk backward compatibility
-LEGACY_CLEAN_CSV = os.path.join(DATA_DIR, "public_text_news_clean.csv")
-
 log = get_logger("04_cleaning")
 
 
@@ -352,9 +349,6 @@ def main():
     # Simpan ke processed/
     os.makedirs(PROCESSED_DIR, exist_ok=True)
     df_output.to_csv(CLEAN_CSV, index=False, encoding="utf-8-sig")
-    
-    # Juga simpan ke lokasi lama (backward compatibility)
-    df_output.to_csv(LEGACY_CLEAN_CSV, index=False, encoding="utf-8-sig")
     
     # ===== Quality Report =====
     stats["final_count"] = len(df_output)

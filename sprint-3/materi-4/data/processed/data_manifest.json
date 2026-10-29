@@ -1,0 +1,187 @@
+{
+  "manifest_metadata": {
+    "version": "1.0.0",
+    "generated_at": "2026-10-29T19:03:49.283987",
+    "algorithm": "SHA-256",
+    "author": "Aulia Muzhaffar (GRAK Intelligence Team)",
+    "description": "Master cryptographic hash manifest ensuring Chain of Custody for Sprint 3 research data."
+  },
+  "files": {
+    "materi-4/data/Survey GRAK 2026 - Sprint 3 (Responses) - Form Responses 1.csv": {
+      "tier": "tier_1_raw_sources",
+      "description": "Form responses survei primer founder startup",
+      "sha256": "531cd232141e6642e8052beccc10e799f8c59d81a4249a908b5347c83800da25",
+      "size_bytes": 8871,
+      "line_count": 13,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/ INTERVIEW (PT PLASTIK SAGO TEKNOLOGI (PST)).docx": {
+      "tier": "tier_1_raw_sources",
+      "description": "Transkrip asli wawancara founder PST",
+      "sha256": "86870024ebf5501cb3c2dcdf2a6a5d13c2bcc784e0f5a696967e0729bb288963",
+      "size_bytes": 18728,
+      "line_count": null,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/ INTERVIEW (SURATPLUS ).docx": {
+      "tier": "tier_1_raw_sources",
+      "description": "Transkrip asli wawancara founder SuratPlus",
+      "sha256": "3a7474a211e93055645176dc95e253348717a56fc8deda83894307f71172e20e",
+      "size_bytes": 18180,
+      "line_count": null,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/ INTERVIEW (bepal).docx": {
+      "tier": "tier_1_raw_sources",
+      "description": "Transkrip asli wawancara founder Bepal Hub",
+      "sha256": "ae6660b9e6d299b7d266a1b09e8a06648f26bac6da200713b0d1c894c0736ac3",
+      "size_bytes": 22643,
+      "line_count": null,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/dataset_aceh_sprint3.csv": {
+      "tier": "tier_1_raw_sources",
+      "description": "Dataset mentah media sosial & komunitas Aceh",
+      "sha256": "06916db81ccf445aa1737be668184fb193367a288a7fddeaa9a3cf211b1530d9",
+      "size_bytes": 175767,
+      "line_count": 312,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/discovery_articles.csv": {
+      "tier": "tier_1_raw_sources",
+      "description": "Hasil pencarian discovery artikel berita Google News",
+      "sha256": "84bf85417ef74ce9d03c97d2dc92496093785efdf17e048e817d12560d2a1da6",
+      "size_bytes": 699599,
+      "line_count": 1351,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/resolved_urls.csv": {
+      "tier": "tier_1_raw_sources",
+      "description": "Hasil URL resolver berita",
+      "sha256": "2a242e3a91f4bbd4b46bd1a779308affb58892f905cc28ddcc1513d2584b5673",
+      "size_bytes": 898239,
+      "line_count": 1348,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/articles_database.csv": {
+      "tier": "tier_1_raw_sources",
+      "description": "Database artikel berita mentah hasil ekstraksi",
+      "sha256": "e960264c4cd815bdafaa4116496ff8ff607bd2b381ebe75d90f2cc4329868ddd",
+      "size_bytes": 4265108,
+      "line_count": 28408,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/paragraphs_raw.csv": {
+      "tier": "tier_1_raw_sources",
+      "description": "Paragraf mentah sebelum deduplikasi",
+      "sha256": "38b6fcfe4c9424b72d9cece066a69186097c4d35bc5385a0eb334d02202bee37",
+      "size_bytes": 7296070,
+      "line_count": 14821,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/survey_structured.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Dataset survei terstruktur kuantitatif N=12",
+      "sha256": "9e99e9c88f94c6890c18191bfe04ea8ac2f705a8cb38bfcb5494dcd505f172f3",
+      "size_bytes": 3084,
+      "line_count": 13,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/survey_text_extracted.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Teks opini terbuka survei N=25 entri",
+      "sha256": "61c5124625bfb3e14863444b2ea7ceaf58d624779fd00a61d83f8fd1c1a6d372",
+      "size_bytes": 8150,
+      "line_count": 26,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/interview_dataset.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Dataset wawancara terindeks 113 unit dialog",
+      "sha256": "5cf890a7d562307b10f076722293ad87b16540e8ad05860ae41a5d06f56f85d2",
+      "size_bytes": 79061,
+      "line_count": 114,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/auto_labeled.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Dataset berita dengan label topik dan sentimen",
+      "sha256": "9c85e7c6558fa42440d87331cbc6718cfe97132dcb0c2be6fdf4222d8c92eca2",
+      "size_bytes": 7200339,
+      "line_count": 13026,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/labeled_dataset_final.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Dataset final berita terlabeli",
+      "sha256": "563f438cb7b965608358971fb4133cd28ca6697a482ed0df84d9d6d0b1bf687d",
+      "size_bytes": 7644675,
+      "line_count": 13841,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/social_media_labeled.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Dataset postingan media sosial terverifikasi",
+      "sha256": "2306e425313b28c385a47e79a83634f4ccaa85b1f334c7ef20dc8d22e30bef72",
+      "size_bytes": 234184,
+      "line_count": 312,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/combined_text.csv": {
+      "tier": "tier_2_processed_datasets",
+      "description": "Korpus gabungan 4 pilar (Golden Dataset)",
+      "sha256": "c4726ba712057e8837a64ff37f455cd9df8b862c1a3b8e792c5adfcb6fb21422",
+      "size_bytes": 4185344,
+      "line_count": 7098,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/storytelling/verified_metrics.json": {
+      "tier": "tier_3_golden_metrics",
+      "description": "Sumber kebenaran metrik kuantitatif dan rasio",
+      "sha256": "61a064b4fa39b793b4219429ad9f8d33465107384893707d4148bf3be56649a3",
+      "size_bytes": 10423,
+      "line_count": 418,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/label_stats.json": {
+      "tier": "tier_3_golden_metrics",
+      "description": "Statistik distribusi label topik dan sentimen",
+      "sha256": "967fd1652a7a9a2053c8f99fcd9d96c4de0dc029bd06558380c0c19d50491364",
+      "size_bytes": 612,
+      "line_count": 27,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/bukti_audit_kebenaran_data.md": {
+      "tier": "tier_4_published_reports",
+      "description": "Dokumen dossier berita acara audit integritas data",
+      "sha256": "1c1a2a4508c1c2fa9efbd20933b6b67056aaa0220e9c9ec6fc53e0c3ba3ab0e9",
+      "size_bytes": 19586,
+      "line_count": 246,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/final_report.md": {
+      "tier": "tier_4_published_reports",
+      "description": "Laporan akhir komprehensif sprint-3 (markdown)",
+      "sha256": "9bd32f46bff13a7d9eae8dc299bfcdc79724930900f97c3d598e854879c7e29e",
+      "size_bytes": 14548,
+      "line_count": 131,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/storytelling/deck/index.html": {
+      "tier": "tier_4_published_reports",
+      "description": "Dek presentasi eksekutif interaktif",
+      "sha256": "24f558b75ba87211548ee846d6195d9b8b57595e7044e6bbdeadd66373f12658",
+      "size_bytes": 518161,
+      "line_count": 1528,
+      "status": "VERIFIED_ACTIVE"
+    },
+    "materi-4/data/processed/laporan_sprint3_tim_data.html": {
+      "tier": "tier_4_published_reports",
+      "description": "Laporan eksekutif master mentor corporate (web view) dikirim ke mentor",
+      "sha256": "b3d40d74a9a1672f14ba5be026fb1d7aafed444d7d42edd0e4467c928fa395dc",
+      "size_bytes": 1075337,
+      "line_count": 3541,
+      "status": "VERIFIED_ACTIVE"
+    }
+  }
+}

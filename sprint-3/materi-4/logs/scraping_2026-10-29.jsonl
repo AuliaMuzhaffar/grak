@@ -1,0 +1,15 @@
+{"timestamp": "2026-10-29 19:01:53", "level": "INFO", "logger": "04_cleaning", "message": "Starting cleaning pipeline", "initial_count": 14818}
+{"timestamp": "2026-10-29 19:01:57", "level": "INFO", "logger": "04_cleaning", "message": "Cleaning completed", "initial": 14818, "final": 13840, "reduction_pct": 6.6}
+{"timestamp": "2026-10-29 19:01:57", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-10-29 19:02:09", "level": "INFO", "logger": "05_labeling", "message": "Auto-backup needs_review.csv created", "backup": "/Users/auliamuzhaffar/Documents/grak/sprint-3/materi-4/data/processed/needs_review.csv.bak"}
+{"timestamp": "2026-10-29 19:02:09", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 13025, "needs_review": 815, "auto_label_pct": 94.1}
+{"timestamp": "2026-10-29 19:03:22", "level": "INFO", "logger": "04_cleaning", "message": "Starting cleaning pipeline", "initial_count": 14818}
+{"timestamp": "2026-10-29 19:03:25", "level": "INFO", "logger": "04_cleaning", "message": "Cleaning completed", "initial": 14818, "final": 13840, "reduction_pct": 6.6}
+{"timestamp": "2026-10-29 19:03:25", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-10-29 19:03:37", "level": "INFO", "logger": "05_labeling", "message": "Auto-backup needs_review.csv created", "backup": "/Users/auliamuzhaffar/Documents/grak/sprint-3/materi-4/data/processed/needs_review.csv.bak"}
+{"timestamp": "2026-10-29 19:03:37", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 13025, "needs_review": 815, "auto_label_pct": 94.1}
+{"timestamp": "2026-10-29 19:04:05", "level": "INFO", "logger": "04_cleaning", "message": "Starting cleaning pipeline", "initial_count": 14818}
+{"timestamp": "2026-10-29 19:04:08", "level": "INFO", "logger": "04_cleaning", "message": "Cleaning completed", "initial": 14818, "final": 13840, "reduction_pct": 6.6}
+{"timestamp": "2026-10-29 19:04:09", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-10-29 19:04:20", "level": "INFO", "logger": "05_labeling", "message": "Auto-backup needs_review.csv created", "backup": "/Users/auliamuzhaffar/Documents/grak/sprint-3/materi-4/data/processed/needs_review.csv.bak"}
+{"timestamp": "2026-10-29 19:04:20", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 13025, "needs_review": 815, "auto_label_pct": 94.1}

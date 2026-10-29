@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Executive Deck — Sprint 3: Listening to the Ecosystem (GRAK 2026)</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --card-bg: #0c0c0c;
+      --card-border: #222222;
+      --card-hover: #171717;
+      --text-main: #f3f4f6;
+      --text-muted: #8e8e93;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      border-bottom: 1px solid var(--card-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-tag {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--accent-emerald);
+    }
+
+    .brand-title {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    nav.slide-nav {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: #111;
+      border-color: #333;
+    }
+
+    .nav-btn.active {
+      background: #1f1f1f;
+      color: #fff;
+      border-color: #444;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+      border: 1px solid #333;
+      background: #111;
+    }
+
+    .badge-green { color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+    .badge-blue { color: #60a5fa; border-color: rgba(96, 165, 250, 0.3); }
+    .badge-amber { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 850px;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+
+    .grid-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+
+    .metric-card:hover {
+      border-color: #3b3b3b;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: -0.04em;
+    }
+
+    .metric-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background: #141414;
+      padding: 0.85rem 1rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #1a1a1a;
+      color: var(--text-main);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status-pill {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .status-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-info { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .insight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .insight-num {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-emerald);
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .insight-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 0.75rem;
+    }
+
+    .insight-body {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .insight-evidence {
+      background: #111;
+      border-left: 2px solid var(--accent-blue);
+      padding: 0.6rem 0.85rem;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.775rem;
+      color: #bbb;
+      font-family: var(--font-mono);
+      line-height: 1.4;
+    }
+
+    .citation-tag {
+      color: var(--accent-amber);
+      font-weight: 600;
+    }
+
+    .zone-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .zone-container { grid-template-columns: 1fr; }
+      header { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+      nav.slide-nav { width: 100%; }
+    }
+
+    .zone-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .zone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid #1c1c1c;
+      padding-bottom: 0.5rem;
+    }
+
+    .zone-name { font-weight: 600; font-size: 1rem; }
+    .zone-share { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-emerald); }
+
+    .zone-metrics {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .zone-desc { font-size: 0.825rem; color: #ccc; line-height: 1.5; }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #050505;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      background: #181818;
+      border: 1px solid #333;
+      color: #eee;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+
+    .btn-action:hover {
+      background: #252525;
+      border-color: #555;
+    }
+
+    .code-block {
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 6px;
+      padding: 0.85rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.825rem;
+      color: #38bdf8;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span class="brand-tag">GRAK 2026 · SPRINT 3</span>
+      <span class="brand-title">Aceh Startup & Tech Ecosystem Intelligence</span>
+    </div>
+    <nav class="slide-nav">
+      <button class="nav-btn active" onclick="goToSlide(0)">1. Ringkasan</button>
+      <button class="nav-btn" onclick="goToSlide(1)">2. Data & Model ML</button>
+      <button class="nav-btn" onclick="goToSlide(2)">3. Ingestion Shield</button>
+      <button class="nav-btn" onclick="goToSlide(3)">4. Pemetaan 4 Zona</button>
+      <button class="nav-btn" onclick="goToSlide(4)">5. Grand Insights</button>
+      <button class="nav-btn" onclick="goToSlide(5)">6. Roadmap Sprint 4</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SLIDE 1: RINGKASAN UTAMA -->
+    <section class="slide active" id="slide-0">
+      <div class="badge-bar">
+        <span class="badge badge-green">● STATUS: DATA CLEAN</span>
+        <span class="badge badge-blue">7 PILAR BALANCED</span>
+        <span class="badge badge-amber">SPRINT 3</span>
+      </div>
+      <h1>Lanskap Ekosistem Startup Aceh</h1>
+      <p class="subtitle">Kompilasi data dan machine learning baseline untuk pemetaan ekosistem teknologi Provinsi Aceh (GRAK 2026).</p>
+
+
+      <div class="grid-metrics">
+        <div class="metric-card">
+          <div class="metric-label">Clean Master Corpus</div>
+          <div class="metric-value">311</div>
+          <div class="metric-desc">Unit teks terverifikasi (0% noise)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Holdout Accuracy (Topic)</div>
+          <div class="metric-value" style="color: #34d399;">85.71%</div>
+          <div class="metric-desc">5-Fold CV: 80.36% (Logistic Regression)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pillar Balance Ratio</div>
+          <div class="metric-value">1.07 : 1</div>
+          <div class="metric-desc">Distribusi merata di 7 pilar ekosistem</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">False Positive Rate (FPR)</div>
+          <div class="metric-value" style="color: #60a5fa;">2.38%</div>
+          <div class="metric-desc">0.00% pada utilitas & kampus</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Komponen Deliverable</th>
+              <th>Target Standar</th>
+              <th>Realisasi Implementasi</th>
+              <th>Status Verifikasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Kanal Data Akuisisi</strong></td>
+              <td>Minimum 2 platform publik</td>
+              <td>3 Kanal: X (239), LinkedIn (36 + RapidOCR), YouTube (36)</td>
+              <td><span class="status-pill status-success">MELAMPAUI TARGET</span></td>
+            </tr>
+            <tr>
+              <td><strong>Kebersihan Korpus</strong></td>
+              <td>Bebas bot & spam</td>
+              <td>0% Noise: Eliminasi bot K-pop, sawit, CPNS, futsal, & noise asing</td>
+              <td><span class="status-pill status-success">100% TERBUKTI</span></td>
+            </tr>
+            <tr>
+              <td><strong>Klasifikasi 7 Pilar</strong></td>
+              <td>Baseline ML &ge; 75%</td>
+              <td>Logistic Regression: Holdout 85.71%, Weighted F1 86.00%</td>
+              <td><span class="status-pill status-success">TERVALIDASI</span></td>
+            </tr>
+            <tr>
+              <td><strong>Pertahanan Noise Eksternal</strong></td>
+              <td>Anti-Hallucination filter</td>
+              <td>Two-Stage Ingestion Shield: 100% True Negative Rejection</td>
+              <td><span class="status-pill status-success">TERUJI ADVERSARIAL</span></td>
+            </tr>
+            <tr>
+              <td><strong>Dashboard Interaktif</strong></td>
+              <td>Visual & eksploratif</td>
+              <td>Streamlit App (app.py) dengan Vercel Dark Aesthetics & 4 Tab</td>
+              <td><span class="status-pill status-info">SIAP DEMO</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: DATA & MODEL ML -->
+    <section class="slide" id="slide-1">
+      <div class="badge-bar">
+        <span class="badge badge-blue">MACHINE LEARNING ARCHITECTURE</span>
+        <span class="badge badge-green">ZERO DATA LEAKAGE</span>
+      </div>
+      <h1>Pipeline Data & Arsitektur Model</h1>
+      <p class="subtitle">Representasi teks n-gram murni berdimensi 10,000 fitur tanpa kebocoran data, dipadukan dengan pengklasifikasi linear berkecepatan sub-milidetik.</p>
+
+      <div class="grid-metrics">
+        <div class="metric-card">
+          <div class="metric-label">X / Twitter Ingestion</div>
+          <div class="metric-value">239</div>
+          <div class="metric-desc">Diskursus publik & sentimen utilitas</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">LinkedIn + RapidOCR</div>
+          <div class="metric-value">36</div>
+          <div class="metric-desc">Post profesional + teks gambar poster</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">YouTube Transcripts</div>
+          <div class="metric-value">36</div>
+          <div class="metric-desc">Webinar inkubasi USK & podcast agritech</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Feature Pipeline</div>
+          <div class="metric-value">10,000</div>
+          <div class="metric-desc">Word [1-2] & Subword Char [3-5] TF-IDF</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Model Kandidat</th>
+              <th>Tipe Klasifikasi</th>
+              <th>Holdout Accuracy</th>
+              <th>5-Fold CV Accuracy</th>
+              <th>Weighted F1</th>
+              <th>Status Keputusan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Logistic Regression</strong></td>
+              <td>Topic (7 Pilar)</td>
+              <td><strong>85.71%</strong></td>
+              <td>80.36%</td>
+              <td>86.00%</td>
+              <td><span class="status-pill status-success">SELECTED PRODUCTION</span></td>
+            </tr>
+            <tr>
+              <td>LinearSVC</td>
+              <td>Topic (7 Pilar)</td>
+              <td>82.54%</td>
+              <td>80.06%</td>
+              <td>82.42%</td>
+              <td><span class="status-pill status-info">BENCHMARK</span></td>
+            </tr>
+            <tr>
+              <td>RidgeClassifier</td>
+              <td>Topic (7 Pilar)</td>
+              <td>82.54%</td>
+              <td>80.06%</td>
+              <td>82.42%</td>
+              <td><span class="status-pill status-info">BENCHMARK</span></td>
+            </tr>
+            <tr>
+              <td><strong>LinearSVC</strong></td>
+              <td>Sentiment (3 Kelas)</td>
+              <td><strong>73.02%</strong></td>
+              <td>71.39%</td>
+              <td>69.83%</td>
+              <td><span class="status-pill status-success">SELECTED PRODUCTION</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: PERTAHANAN INGESTION SHIELD -->
+    <section class="slide" id="slide-2">
+      <div class="badge-bar">
+        <span class="badge badge-amber">OUT-OF-DOMAIN SHIELD</span>
+        <span class="badge badge-green">100% TRUE NEGATIVE RATE</span>
+      </div>
+      <h1>Pertahanan Ingestion Shield & Audit False Positive</h1>
+      <p class="subtitle">Mencegah model machine learning berhalusinasi terhadap teks umum non-ekosistem di Aceh melalui dua lapis penyaringan proaktif.</p>
+
+      <div class="grid-metrics">
+        <div class="metric-card">
+          <div class="metric-label">Rata-rata False Positive Rate</div>
+          <div class="metric-value" style="color: #34d399;">2.38%</div>
+          <div class="metric-desc">Standar industri NLP: &lt; 5.0%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">FPR Infrastructure</div>
+          <div class="metric-value" style="color: #60a5fa;">0.00%</div>
+          <div class="metric-desc">Nol kesalahan klasifikasi utilitas</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">FPR Campus Ecosystem</div>
+          <div class="metric-value" style="color: #60a5fa;">0.00%</div>
+          <div class="metric-desc">Nol kesalahan klasifikasi akademik</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Adversarial Rejection</div>
+          <div class="metric-value" style="color: #f59e0b;">100%</div>
+          <div class="metric-desc">8 dari 8 uji noise umum ditolak sukses</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Contoh Teks Kebisingan Umum (Adversarial Input)</th>
+              <th>Prediksi Mentah Tanpa Shield</th>
+              <th>Respon Sistem Ingestion Shield</th>
+              <th>Hasil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"Satpol PP dan Wilayatul Hisbah menggelar razia penertiban pedagang kaki lima di Banda Aceh."</td>
+              <td>Program (Conf: 33.3%)</td>
+              <td><strong>DITOLAK SEBELUM KLASIFIKASI (Out-of-Domain)</strong></td>
+              <td><span class="status-pill status-success">TRUE NEGATIVE</span></td>
+            </tr>
+            <tr>
+              <td>"PT Asia Sawit Makmur Jaya mencari safety officer perkebunan kelapa sawit di Nagan Raya."</td>
+              <td>Talent (Conf: 19.9%)</td>
+              <td><strong>DITOLAK SEBELUM KLASIFIKASI (Out-of-Domain)</strong></td>
+              <td><span class="status-pill status-success">TRUE NEGATIVE</span></td>
+            </tr>
+            <tr>
+              <td>"Pertandingan liga futsal antar pemuda gampong berlangsung meriah di Lhokseumawe."</td>
+              <td>Talent (Conf: 18.2%)</td>
+              <td><strong>DITOLAK SEBELUM KLASIFIKASI (Out-of-Domain)</strong></td>
+              <td><span class="status-pill status-success">TRUE NEGATIVE</span></td>
+            </tr>
+            <tr>
+              <td>"Promo tisu Montiss kelembutan alami kini hadir di toko retail grosir Banda Aceh."</td>
+              <td>Program (Conf: 33.8%)</td>
+              <td><strong>DITOLAK SEBELUM KLASIFIKASI (Out-of-Domain)</strong></td>
+              <td><span class="status-pill status-success">TRUE NEGATIVE</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: PEMETAAN 4 ZONA WILAYAH -->
+    <section class="slide" id="slide-3">
+      <div class="badge-bar">
+        <span class="badge badge-blue">REGIONAL INTELLIGENCE</span>
+        <span class="badge badge-green">4 GEOGRAPHIC ZONES</span>
+      </div>
+      <h1>Pemetaan Lintas Wilayah (Cross-Regional Analysis)</h1>
+      <p class="subtitle">Eksplorasi disparitas spasial ekosistem teknologi di seluruh penjuru Provinsi Aceh.</p>
+
+      <div class="zone-container">
+        <div class="zone-card">
+          <div class="zone-header">
+            <span class="zone-name">Zone 1: Banda Aceh & Aceh Besar</span>
+            <span class="zone-share">30.87% Korpus</span>
+          </div>
+          <div class="zone-metrics">
+            <span>Positif: 22</span> · <span>Netral: 66</span> · <span>Negatif: 8</span>
+          </div>
+          <p class="zone-desc"><strong>Episentrum & Hub Kebijakan:</strong> Terkonsentrasi pada ekosistem kampus USK/UIN (23 unit) dan pendanaan hibah (8 unit). Menjadi pusat komunitas IT dan inisiatif inkubasi pemerintah.</p>
+        </div>
+
+        <div class="zone-card">
+          <div class="zone-header">
+            <span class="zone-name">Zone 2: Lhokseumawe, Aceh Utara, Bireuen</span>
+            <span class="zone-share">6.43% Korpus</span>
+          </div>
+          <div class="zone-metrics">
+            <span>Positif: 3</span> · <span>Netral: 17</span> · <span>Negatif: 0</span>
+          </div>
+          <p class="zone-desc"><strong>Anchor Politeknik & Talenta:</strong> Dipimpin oleh Politeknik Negeri Lhokseumawe (PNL) dan Unimal. Fokus diskursus pada ketersediaan talent engineering (9 unit) dan pasar industri.</p>
+        </div>
+
+        <div class="zone-card">
+          <div class="zone-header">
+            <span class="zone-name">Zone 3: Barat-Selatan (Barsela)</span>
+            <span class="zone-share">13.18% Korpus</span>
+          </div>
+          <div class="zone-metrics">
+            <span>Positif: 15</span> · <span>Netral: 19</span> · <span style="color: #f43f5e;">Negatif: 7</span>
+          </div>
+          <p class="zone-desc"><strong>Krisis Utilitas & Blank Spot:</strong> Rasio sentimen negatif infrastruktur tertinggi di Aceh (56.8%). Pemadaman listrik berkala dan jaringan serat optik putus melumpuhkan aktivitas freelance dan server lokal.</p>
+        </div>
+
+        <div class="zone-card">
+          <div class="zone-header">
+            <span class="zone-name">Zone 4: Dataran Gayo & Timur-Tenggara</span>
+            <span class="zone-share">5.79% Korpus</span>
+          </div>
+          <div class="zone-metrics">
+            <span>Positif: 1</span> · <span>Netral: 15</span> · <span>Negatif: 2</span>
+          </div>
+          <p class="zone-desc"><strong>Kluster Komoditas & Agritech:</strong> Topik pasar mendominasi (10 unit). Kebutuhan digitalisasi berpusat pada keterlacakan rantai pasok (*supply chain traceability*) komoditas Kopi Arabika Gayo dan Nilam.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: 5 GRAND INSIGHTS -->
+    <section class="slide" id="slide-4">
+      <div class="badge-bar">
+        <span class="badge badge-green">5-LAYER ANALYTICAL FRAMEWORK</span>
+        <span class="badge badge-amber">100% EMPIRICALLY CITED</span>
+      </div>
+      <h1>5 Grand Insights Strategis untuk Pengambil Kebijakan</h1>
+      <p class="subtitle">Temuan riset murni berlandaskan data korpus pengguna (Data &rarr; Pattern &rarr; Interpretation &rarr; Insight &rarr; Evidence).</p>
+
+      <div class="insights-grid">
+        <div class="insight-card">
+          <div>
+            <span class="insight-num">INSIGHT #1</span>
+            <h3 class="insight-title">Jebakan Pemburu Hibah (The Grant-Hunting Cycle)</h3>
+            <p class="insight-body">Ketiadaan permodalan berisiko lokal (*angel investor network*) memaksa startup bergantung pada kompetisi dan hibah tahunan dinas, melahirkan fenomena *Zombie Startups* yang hidup saat seremoni namun mati suri setelah hadiah habis.</p>
+          </div>
+          <div class="insight-evidence">
+            Bukti: <span class="citation-tag">[x_90]</span> <span class="citation-tag">[x_35]</span> <span class="citation-tag">[x_353]</span> — 49 unit pendanaan didominasi hibah seremonial; 0 entitas VC berbadan hukum lokal.
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div>
+            <span class="insight-num">INSIGHT #2</span>
+            <h3 class="insight-title">Paradox Talenta IT & Arbitrase Kerja Remote</h3>
+            <p class="insight-body">Kampus teknik (USK, PNL) mencetak banyak insinyur perangkat lunak, namun engineer senior menghilang dari bursa kerja lokal karena bekerja jarak jauh (*remote*) untuk Jakarta dengan kompensasi 3-5x lipat UMR lokal.</p>
+          </div>
+          <div class="insight-evidence">
+            Bukti: <span class="citation-tag">[x_251]</span> <span class="citation-tag">[li_post_8400844]</span> — 53 unit data talenta merekam disparitas upah dan kesulitan startup lokal merekrut lead developer.
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div>
+            <span class="insight-num">INSIGHT #3</span>
+            <h3 class="insight-title">Ekosistem Dua Kecepatan & Kampus Anchor di Tier-2</h3>
+            <p class="insight-body">Luar Banda Aceh (Lhokseumawe, Meulaboh) tidak memiliki coworking space atau inkubator swasta. Laboratorium politeknik dan dosen adalah satu-satunya tumpuan (*safe harbor*) keberlangsungan inovasi digital.</p>
+          </div>
+          <div class="insight-evidence">
+            Bukti: <span class="citation-tag">[x_400]</span> <span class="citation-tag">[x_401]</span> — Keterkaitan aktivitas dengan kampus mencapai 21.2% di tier-2 vs 25.8% di Banda Aceh.
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div>
+            <span class="insight-num">INSIGHT #4</span>
+            <h3 class="insight-title">Pajak Siluman Utilitas (The Offline Operational Tax)</h3>
+            <p class="insight-body">Blackout listrik PLN berulang dan serat optik putus di pesisir Barsela membebankan biaya overhead tinggi (genset, kuota seluler darurat, penalti downtime klien luar daerah), menuntut arsitektur *Offline-First*.</p>
+          </div>
+          <div class="insight-evidence">
+            Bukti: <span class="citation-tag">[x_67]</span> <span class="citation-tag">[x_88]</span> <span class="citation-tag">[x_102]</span> — 56.82% sentimen negatif pada pilar utilitas dasar di zona pesisir.
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div>
+            <span class="insight-num">INSIGHT #5</span>
+            <h3 class="insight-title">B2B Komoditas Unggulan sebagai Satu-Satunya Jalan</h3>
+            <p class="insight-body">Model B2C konsumtif mentok karena keterbatasan daya beli masyarakat luas. Startup yang bertumbuh sehat berfokus pada digitalisasi rantai pasok komoditas ekspor (Kopi Gayo, Nilam ARC USK).</p>
+          </div>
+          <div class="insight-evidence">
+            Bukti: <span class="citation-tag">[li_post_8400845]</span> <span class="citation-tag">[yt_v12]</span> <span class="citation-tag">[x_220]</span> — 57 unit data pasar membuktikan traksi tinggi pada vertikal komoditas.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: ROADMAP IMPLEMENTASI SPRINT 4 -->
+    <section class="slide" id="slide-5">
+      <div class="badge-bar">
+        <span class="badge badge-blue">ACTIONABLE RECOMMENDATIONS</span>
+        <span class="badge badge-green">SPRINT 4 READINESS</span>
+      </div>
+      <h1>Rekomendasi Aksi Konkret (Roadmap Sprint 4)</h1>
+      <p class="subtitle">Tiga pilar intervensi strategis untuk melangkah dari riset (*listening*) ke eksekusi produk (*building*).</p>
+
+      <div class="grid-metrics">
+        <div class="metric-card">
+          <div class="metric-label">1. Rekayasa Produk</div>
+          <div class="metric-value" style="font-size: 1.35rem; color: #38bdf8;">Offline-First PWA</div>
+          <div class="metric-desc">Penyimpanan lokal (IndexedDB / SQLite embedded) tahan pemadaman listrik & blank spot Barsela.</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">2. Validasi Bisnis</div>
+          <div class="metric-value" style="font-size: 1.35rem; color: #34d399;">Agritech B2B</div>
+          <div class="metric-desc">Fokus sistem ketertelusuran (*traceability*) Kopi Arabika Gayo & Nilam ARC USK ke agregator ekspor.</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">3. Kebijakan Permodalan</div>
+          <div class="metric-value" style="font-size: 1.35rem; color: #fbbf24;">Aceh Angel Syndicate</div>
+          <div class="metric-desc">Konsorsium pengusaha diaspora untuk menyalurkan micro-seed investment ($5k-$15k) plus mentorship.</div>
+        </div>
+      </div>
+
+      <div class="metric-card" style="margin-top: 1rem;">
+        <div class="metric-label" style="margin-bottom: 0.75rem;">Perintah Cepat Verifikasi untuk Evaluator</div>
+        <div class="code-block">
+          streamlit run app.py
+        </div>
+        <p style="font-size: 0.85rem; color: #999;">Buka di browser untuk mencoba demo klasifikasi single & batch, filter wilayah, dan sistem pertahanan anti-noise.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>Catatan Riset Sprint 3 · GRAK 2026</div>
+    <div class="controls">
+      <button class="btn-action" onclick="prevSlide()">&#8592; Prev</button>
+      <button class="btn-action" onclick="nextSlide()">Next &#8594;</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    function goToSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      slides[currentSlide].classList.remove('active');
+      navBtns[currentSlide].classList.remove('active');
+      currentSlide = index;
+      slides[currentSlide].classList.add('active');
+      navBtns[currentSlide].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+  </script>
+</body>
+</html>

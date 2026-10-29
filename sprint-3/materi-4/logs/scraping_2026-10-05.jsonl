@@ -1,0 +1,22 @@
+{"timestamp": "2026-10-05 15:04:14", "level": "INFO", "logger": "05_labeling", "message": "Starting labeling pipeline (2-pass)", "total": 13840}
+{"timestamp": "2026-10-05 15:04:25", "level": "INFO", "logger": "05_labeling", "message": "Auto-backup needs_review.csv created", "backup": "/Users/auliamuzhaffar/Documents/grak/sprint-3/materi-4/data/processed/needs_review.csv.bak"}
+{"timestamp": "2026-10-05 15:04:25", "level": "INFO", "logger": "05_labeling", "message": "Labeling completed (2-pass)", "total_auto_labeled": 13025, "needs_review": 815, "auto_label_pct": 94.1}
+{"timestamp": "2026-10-05 18:42:28", "level": "INFO", "logger": "09_dashboard", "message": "Dashboard generated", "output": "/Users/auliamuzhaffar/Documents/grak/sprint-3/materi-4/data/processed/dashboard/index.html"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "Audit pipeline started", "timestamp": "2026-10-16 22:18:07"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[CHECK 1/4] Uji Integritas Kriptografis (SHA-256 Manifest Check)", "step": 1}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] 74/74 file lolos verifikasi hash.", "passed": 74, "total": 74, "step": 1, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[CHECK 2/4] Rekonsiliasi Matematis & Live Recalculation", "step": 2}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Ukuran sampel survei terverifikasi: N = 12 responden", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Persentase Unfunded: 10/12 = 83.33% (Tepat 83,3%)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Bootstrapping Ber-revenue: 6/7 = 85.71% (Tepat 85,7%)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata kemudahan bertahan: 4.08 (Diharapkan 4.08)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata kemudahan pasar: 3.75 (Diharapkan 3.75)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata persepsi optimis: 3.08 (Diharapkan 3.08)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata kemudahan talent: 3.00 (Diharapkan 3.00)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata persepsi infra: 2.92 (Diharapkan 2.92)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata persepsi ekosistem: 2.58 (Diharapkan 2.58)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata persepsi mentor: 2.08 (Diharapkan 2.08)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata persepsi pemerintah: 1.67 (Diharapkan 1.67)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "[OK] Rerata persepsi pendanaan: 1.42 (Diharapkan 1.42)", "passed": 1, "total": 1, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "16_verify_chain_of_custody", "message": "Status Check 2: [OK] 12/12 metrik kuantitatif terverifikasi.", "passed": 12, "total": 12, "step": 2, "status": "passed"}
+{"timestamp": "2026-10-16 22:18:07", "level": "INFO", "logger": "

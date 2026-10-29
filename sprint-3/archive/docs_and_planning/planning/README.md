@@ -12,7 +12,8 @@
 |------|------|----------|--------|
 | **Fase 1** | [fase-1-fix-scraping.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-1-fix-scraping.md) | 1.5-2 hari | ✅ Selesai |
 | **Fase 2** | [fase-2-cleaning.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-2-cleaning.md) | 0.5-1 hari | ✅ Selesai |
-| **Fase 3** | [fase-3-labeling.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-3-labeling.md) | 1-1.5 hari | ⬜ Belum |
+| **Fase 3** | [fase-3-labeling.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-3-labeling.md) | 1-1.5 hari | ✅ Selesai |
+| **Fase 3.5** | [fase-3.5-integrasi-data.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-3.5-integrasi-data.md) | 1.5-2 hari | ✅ Selesai |
 | **Fase 4** | [fase-4-ml-model.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-4-ml-model.md) | 1.5-2 hari | ⬜ Belum |
 | **Fase 5** | [fase-5-dashboard.md](file:///Users/auliamuzhaffar/Documents/grak/sprint-3/planning/fase-5-dashboard.md) | 1-1.5 hari | ⬜ Belum |
 
@@ -23,15 +24,16 @@
 ## 🔗 Dependency Graph
 
 ```
-Fase 1 ──→ Fase 2 ──→ Fase 3 ──→ Fase 4 ──→ Fase 5
-Scraping    Cleaning    Labeling    ML Model    Dashboard
-(2 hari)    (0.5 hari)  (1.5 hari)  (2 hari)    (1 hari)
+Fase 1 ──→ Fase 2 ──→ Fase 3 ──→ Fase 3.5 ──→ Fase 4 ──→ Fase 5
+Scraping    Cleaning    Labeling    Integrasi    ML Model    Dashboard
+(2 hari)    (0.5 hari)  (1.5 hari)  (1.5 hari)   (2 hari)    (1 hari)
 
-Output:     Output:      Output:     Output:     Output:
-resolved    clean.csv    labeled     .pkl models index.html
-articles    quality      _final.csv  eval report report.md
-.csv        report                   confusion
-                                     matrix
+Output:     Output:      Output:     Output:       Output:     Output:
+resolved    clean.csv    labeled     combined      .pkl models index.html
+articles    quality      _final.csv  _text.csv     eval report report.md
+.csv        report                   survey_       confusion
+                                     structured    matrix
+                                     triangulation
 ```
 
 **Setiap fase HARUS selesai sebelum fase berikutnya dimulai.**

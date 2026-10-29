@@ -24,6 +24,17 @@ CARA UPDATE:
 #   Topic dipilih berdasarkan score tertinggi.
 #   Minimum score = 3 untuk dianggap auto-labeled.
 
+# ============================================================
+# ECOSYSTEM MASTER DICTIONARY (Domain Validation)
+# ============================================================
+ECOSYSTEM_KEYWORDS = [
+    'digital', 'startup', 'inovasi', 'teknologi', 'aplikasi', 'sistem',
+    'umkm', 'bisnis', 'wirausaha', 'ekonomi', 'pasar', 'koperasi', 'industri',
+    'pendanaan', 'investasi', 'modal', 'hibah', 'investor', 'keuangan', 'bank',
+    'pelatihan', 'sertifikasi', 'edukasi', 'pendidikan', 'literasi', 'kompetensi', 'sdm', 'mahasiswa', 'kampus',
+    'regulasi', 'kebijakan', 'pemerintah', 'infrastruktur', 'internet', 'kominfo'
+]
+
 TOPIC_RULES = {
     "funding": {
         "strong": [

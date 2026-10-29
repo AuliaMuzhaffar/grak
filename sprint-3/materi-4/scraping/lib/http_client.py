@@ -127,21 +127,19 @@ class RateLimitedClient:
         return self.domain_delays.get("default", 1.0)
     
     def _wait_for_rate_limit(self, domain: str):
-        """Tunggu sampai boleh request ke domain ini."""
+        """Tunggu sampai boleh request ke domain ini tanpa memblokir domain lain."""
         delay = self._get_delay(domain)
         
         with self._lock:
             now = time.time()
             last_time = self._last_request_time.get(domain, 0)
-            elapsed = now - last_time
-            
-            if elapsed < delay:
-                wait_time = delay - elapsed
-                # Tambah sedikit jitter (random 0-0.5 detik) agar tidak terlalu predictable
-                wait_time += random.uniform(0, 0.5)
-                time.sleep(wait_time)
-            
-            self._last_request_time[domain] = time.time()
+            min_delay = delay + random.uniform(0, 0.5)
+            next_allowed = max(now, last_time + min_delay)
+            self._last_request_time[domain] = next_allowed
+            wait_time = next_allowed - now
+
+        if wait_time > 0:
+            time.sleep(wait_time)
     
     def _get_random_headers(self) -> dict:
         """Generate headers dengan random User-Agent."""

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriks Triangulasi Riset Ekosistem Startup Aceh — Sprint 3</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 30px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        h1 {
+            color: #0f172a;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+        p.subtitle {
+            color: #64748b;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .badge-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .badge-macro { background: #e0f2fe; color: #0369a1; }
+        .badge-micro { background: #ffedd5; color: #c2410c; }
+        .badge-qual { background: #f3e8ff; color: #7e22ce; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        th {
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        tr:hover td {
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 Matriks Triangulasi Multi-Sumber: Validasi Hipotesis H1 – H6</h1>
+        <p class="subtitle">Riset Ekosistem Startup Aceh 2026 · Metode Integrasi Data-Centric AI (DCAI) & Mixed-Methods</p>
+        
+        <div class="badge-bar">
+            <span class="badge badge-macro">🌐 Sumber Macro: 6.648 Berita Scraping (Golden Dataset)</span>
+            <span class="badge badge-micro">📊 Sumber Micro: 12 Responden Survei Primer (25 Opini)</span>
+            <span class="badge badge-qual">🎙️ Sumber Kualitatif: 113 Unit Ide Wawancara (3 Entitas)</span>
+            <span class="badge" style="background: #dcfce7; color: #15803d;">📱 Sumber Grassroots: 311 Post Sosmed (X/YT/LI)</span>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 4%;">ID</th>
+                    <th style="width: 13%;">Judul Hipotesis</th>
+                    <th style="width: 17%;">Klaim Hipotesis</th>
+                    <th style="width: 16%;">Bukti Berita (Macro)</th>
+                    <th style="width: 15%;">Bukti Survei (Micro)</th>
+                    <th style="width: 15%;">Bukti Wawancara (Mendalam)</th>
+                    <th style="width: 15%;">Bukti Sosmed (Grassroots)</th>
+                    <th style="width: 10%; text-align: center;">Konvergensi</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td style="font-weight: bold; text-align: center; color: #2c3e50;">H1</td>
+            <td style="font-weight: 600; color: #34495e;">Akses Pendanaan Khusus Startup</td>
+            <td style="color: #555; font-size: 0.9em;">Akses pendanaan khusus startup (VC, angel, seed) sangat terbatas di luar hibah awal.</td>
+            <td style="background-color: #f4f6f9; font-size: 0.88em;">1,968 paragraf (14.2%); dominan KUR/UMKM konvensional; 6 sentimen negatif.</td>
+            <td style="background-color: #fbf6f0; font-size: 0.88em;">6/12 (50.0%) pilih tantangan pendanaan; Skor Likert pendanaan terendah: mean 1.42 (median 1.0).</td>
+            <td style="background-color: #f9f4fb; font-size: 0.88em;">19 unit argumen; SuratPlus: 2 tahun bootstrapping tanpa funding; PST: pendanaan putus setelah kontrak riset selesai.</td>
+            <td style="background-color: #f0fdf4; font-size: 0.88em;">45 unit (14.5%); percakapan VC/Angel lokal nihil, dominasi 'Grant-Seeking Trap' & ketergantungan kompetisi.</td>
+            <td style="text-align: center;">
+                <span style="background-color: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.82em;">
+                    SUPPORTED
+                </span>
+                <div style="font-size: 0.75em; color: #6c757d; margin-top: 4px;">4/4 Sumber Konvergen (Sangat Kuat)</div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="font-weight: bold; text-align: center; color: #2c3e50;">H2</td>
+            <td style="font-weight: 600; color: #34495e;">Kesenjangan Ketersediaan Talent Digital</td>
+            <td style="color: #555; font-size: 0.9em;">Kesenjangan talent digital lokal menghambat rekayasa produk inovatif.</td>
+            <td style="background-color: #f4f6f9; font-size: 0.88em;">2,370 paragraf (17.1%); dominasi pelatihan dasar/vokasi, minim software engineering mendalam.</td>
+            <td style="background-color: #fbf6f0; font-size: 0.88em;">5/12 (41.7%) pilih kendala talent; Ketersediaan mentor dinilai rendah (mean 2.08/5).</td>
+            <td style="background-color: #f9f4fb; font-size: 0.88em;">17 unit argumen; Bepal: banyak minat desain/marketing tapi defisit mindset engineering; SuratPlus rekrut remote ke Jakarta.</td>
+            <td style="background-color: #f0fdf4; font-size: 0.88em;">44 unit (14.1%); fenomena 'Brain Drain' & 'Remote Arbitrage' (engineer lokal kerja remote Jakarta/global gaji 3-5x UMR).</td>
+            <td style="text-align: center;">
+                <span style="background-color: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.82em;">
+                    SUPPORTED
+                </span>
+                <div style="font-size: 0.75em; color: #6c757d; margin-top: 4px;">4/4 Sumber Konvergen (Sangat Kuat)</div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="font-weight: bold; text-align: center; color: #2c3e50;">H3</td>
+            <td style="font-weight: 600; color: #34495e;">Ketergantungan Anchor Institution Luar Banda Aceh</td>
+            <td style="color: #555; font-size: 0.9em;">Startup luar Banda Aceh bergantung pada kampus/institusi jangkar sebagai penopang tunggal.</td>
+            <td style="background-color: #f4f6f9; font-size: 0.88em;">Pemberitaan startup di Lhokseumawe/Langsa terpusat pada event perguruan tinggi (Unimal/PNL).</td>
+            <td style="background-color: #fbf6f0; font-size: 0.88em;">2 founder luar Banda Aceh mendapatkan inkubasi dan fasilitas murni dari kampus.</td>
+            <td style="background-color: #f9f4fb; font-size: 0.88em;">69 unit; PST lahir murni dari CoE TechnoPlast Unimal & mesin pinjaman pabrik mitra; Bepal bergantung jejaring lokal.</td>
+            <td style="background-color: #f0fdf4; font-size: 0.88em;">Aktivitas teknologi luar Banda Aceh (222 post) terkonsentrasi pada kampus (PNL, Unimal, UTU Meulaboh); ketiadaan coworking commercial swasta.</td>
+            <td style="text-align: center;">
+                <span style="background-color: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.82em;">
+                    SUPPORTED
+                </span>
+                <div style="font-size: 0.75em; color: #6c757d; margin-top: 4px;">4/4 Sumber Konvergen (Sangat Kuat)</div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="font-weight: bold; text-align: center; color: #2c3e50;">H4</td>
+            <td style="font-weight: 600; color: #34495e;">Kelemahan Tindak Lanjut (Follow-up) Program</td>
+            <td style="color: #555; font-size: 0.9em;">Inkubasi/pelatihan cenderung seremonial tanpa pendampingan bisnis berkelanjutan.</td>
+            <td style="background-color: #f4f6f9; font-size: 0.88em;">2,663 paragraf (19.2%); dominan seremonial pembukaan program, minim publikasi alumni yang survive.</td>
+            <td style="background-color: #fbf6f0; font-size: 0.88em;">33.3% responden menyatakan tidak ada follow-up konkret pasca-program; Persepsi ekosistem umum rendah (mean 2.58).</td>
+            <td style="background-color: #f9f4fb; font-size: 0.88em;">23 unit; SuratPlus: banyak startup kampus mati pasca-lomba; Bepal: program komunitas layu sebelum berkembang.</td>
+            <td style="background-color: #f0fdf4; font-size: 0.88em;">90 unit ekosistem; kritik program berbasis serapan anggaran 'event-driven' tanpa jalur komersialisasi nyata (inflasi 'abandoned MVPs').</td>
+            <td style="text-align: center;">
+                <span style="background-color: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.82em;">
+                    SUPPORTED
+                </span>
+                <div style="font-size: 0.75em; color: #6c757d; margin-top: 4px;">4/4 Sumber Konvergen (Sangat Kuat)</div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="font-weight: bold; text-align: center; color: #2c3e50;">H5</td>
+            <td style="font-weight: 600; color: #34495e;">Hambatan Akses Pasar Lokal & Kebutuhan Ekspansi</td>
+            <td style="color: #555; font-size: 0.9em;">Pasar lokal Aceh memiliki keterbatasan serapan B2B/digital, memaksa ekspansi pasar nasional.</td>
+            <td style="background-color: #f4f6f9; font-size: 0.88em;">1,466 paragraf (10.6%); berita penetrasi pasar terpusat pada bazar UMKM dan pameran temporer.</td>
+            <td style="background-color: #fbf6f0; font-size: 0.88em;">3/12 (25.0%) sebut pasar tantangan utama; Kemudahan pasar luar wilayah dinilai relatif tinggi (mean 3.75/5).</td>
+            <td style="background-color: #f9f4fb; font-size: 0.88em;">34 unit (topik terbanyak!); SuratPlus: pasar lokal maunya gratisan, mayoritas user berbayar dari nasional; PST: pasar lokal belum teredukasi.</td>
+            <td style="background-color: #f0fdf4; font-size: 0.88em;">45 unit pasar; pasar B2C lokal sempit (daya beli terkonsentrasi ASN), startup bertahan bertumpu pada B2B, komoditas Gayo/Nilam, atau pasar nasional.</td>
+            <td style="text-align: center;">
+                <span style="background-color: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.82em;">
+                    SUPPORTED
+                </span>
+                <div style="font-size: 0.75em; color: #6c757d; margin-top: 4px;">4/4 Sumber Konvergen (Sangat Kuat)</div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="font-weight: bold; text-align: center; color: #2c3e50;">H6</td>
+            <td style="font-weight: 600; color: #34495e;">Ketimpangan Dukungan (Digital Marketing > Product R&D)</td>
+            <td style="color: #555; font-size: 0.9em;">Program ekosistem dominan pada eksposur/pemasaran dasar, minim bantuan rekayasa produk/R&D.</td>
+            <td style="background-color: #f4f6f9; font-size: 0.88em;">Topik 'digitalization' (22.3%) dan UMKM go digital mendominasi jauh di atas topik riset teknologi murni.</td>
+            <td style="background-color: #fbf6f0; font-size: 0.88em;">Jenis dukungan diterima didominasi pelatihan umum/mentoring, 0% menerima dukungan fasilitas prototyping/R&D teknologi mendalam.</td>
+            <td style="background-color: #f9f4fb; font-size: 0.88em;">16 unit; PST kesulitan mesin injeksi cetak mandiri; SuratPlus: event SMTI/workshop lebih banyak eksposur publik dibanding bimbingan AI engineering.</td>
+            <td style="background-color: #f0fdf4; font-size: 0.88em;">Kesenjangan 'Seller vs Builder': pelatihan didominasi tips sosmed/Canva vs developer mandiri; utilitas dasar (listrik padam PLN) menjadi bottleneck (42 post, 56.8% negatif).</td>
+            <td style="text-align: center;">
+                <span style="background-color: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.82em;">
+                    SUPPORTED
+                </span>
+                <div style="font-size: 0.75em; color: #6c757d; margin-top: 4px;">4/4 Sumber Konvergen (Sangat Kuat)</div>
+            </td>
+        </tr>
+        
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
